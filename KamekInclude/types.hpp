@@ -60,7 +60,6 @@ struct RGBA16 {
 
 #define offsetof(st, m) \
     ((const u32)&(((const st *)0)->m))
-#endif
 
 #ifdef __INTELLISENSE__
 #define ASM(...)
@@ -79,6 +78,10 @@ struct RGBA16 {
 #define ASM(...) __VA_ARGS__
 #define override
 #define size_assert(type, num) static_assert(sizeof(type) ==num,#type)
+#endif
+
+
+
 #endif
 
 

@@ -4,7 +4,7 @@
 #include <SlotExpansion/UI/ExpCupSelect.hpp>
 #include <UI/UI.hpp>
 #include <Settings/Settings.hpp>
-
+#include <MKVN.hpp>
 
 
 
@@ -75,11 +75,33 @@ UIControl* ExpCupSelect::CreateControl(u32 controlId) {
 }
 
 void ExpCupSelect::OnRightArrowSelect(SheetSelectControl& control, u32 hudSlotId) {
+    if(U8_MENU == 0x01) {
     this->OnArrowSelect(2);
+    }
+    else if(U8_MENU == 0x02) {
+    this->OnArrowSelect(4);
+    }
+    else if(U8_MENU == 0x03) {
+    this->OnArrowSelect(6);
+    }
+    else if(U8_MENU == 0x04) {
+    this->OnArrowSelect(8);
+    }
 }
 
 void ExpCupSelect::OnLeftArrowSelect(SheetSelectControl& control, u32 hudSlotId) {
+    if(U8_MENU == 0x01) {
     this->OnArrowSelect(-2);
+    }
+    else if(U8_MENU == 0x02) {
+    this->OnArrowSelect(-4);
+    }
+    else if(U8_MENU == 0x03) {
+    this->OnArrowSelect(-6);
+    }
+    else if(U8_MENU == 0x04) {
+    this->OnArrowSelect(-8);
+    }
 }
 
 void ExpCupSelect::OnArrowSelect(s32 direction) {
@@ -199,7 +221,7 @@ void ExpCupSelect::UpdateCupData(PulsarCupId pulsarCupId, LayoutUIControl& contr
             bmgId = BMG_TEXT;
         }
         else bmgId = BMG_CUPS;
-        snprintf(tplName, 0x20, "icon_%03d.tpl", tplId);
+        snprintf(tplName, 0x20, "icon_%04d.tpl", tplId);
     }
     control.SetMessage(bmgId + realCupId, &info);
     ChangeImage(control, "icon", tplName);

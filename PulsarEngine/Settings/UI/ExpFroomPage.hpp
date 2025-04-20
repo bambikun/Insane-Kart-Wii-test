@@ -26,10 +26,13 @@ private:
     void ExtOnButtonSelect(PushButton& button, u32 hudSlotId);
     void OnSettingsButtonClick(PushButton& button, u32 hudSlotId);
     void OnTeamsButtonClick(PushButton& button, u32 hudSlotId);
+    void OnKickButtonClick(PushButton& button, u32 hudSlotId);
     PtmfHolder_2A<ExpFroom, void, PushButton&, u32> onSettingsClickHandler;
     PtmfHolder_2A<ExpFroom, void, PushButton&, u32> onTeamsClickHandler;
+    PtmfHolder_2A<ExpFroom, void, PushButton&, u32> onKickClickHandler;
     PushButton settingsButton;
     PushButton teamsButton;
+    PushButton kickButton;
     bool areControlsHidden;
 public:
     PulPageId topSettingsPage;

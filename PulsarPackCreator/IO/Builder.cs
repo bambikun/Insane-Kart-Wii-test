@@ -169,14 +169,14 @@ namespace Pulsar_Pack_Creator.IO
                         }
                         if (hasCustomIcons)
                         {
-                            int size = 128 / (1 + (customCupIcons.Count - 1) / 100);
+                            int size = 64;
                             foreach ((string, int) elem in customCupIcons)
                             {
                                 using (Image image = Image.FromFile(elem.Item1))
                                 {
                                     new Bitmap(image, size, size).Save($"temp/{elem.Item2}.png");
                                 }
-                                wimgtProcessInfo.Arguments = $"encode temp/{elem.Item2}.png --dest temp/UIAssets.d/button/timg/icon_{elem.Item2:D3}.tpl --transform CMPR -o";
+                                wimgtProcessInfo.Arguments = $"encode temp/{elem.Item2}.png --dest temp/UIAssets.d/button/timg/icon_{elem.Item2:D4}.tpl --transform CMPR -o";
                                 wimgtProcess.Start();
                                 error = wimgtProcess.StandardError.ReadToEnd();
                                 if (error != "") return Result.WIMGT;
@@ -324,11 +324,11 @@ namespace Pulsar_Pack_Creator.IO
 
                 string iconName = cup.iconName;
                 string finalIconName = "";
-                if (iconName.Length > 4 && (cupIdx >= 100 || iconName.Remove(iconName.Length - 4) != MainWindow.Cup.defaultNames[cup.idx]))
+                if (iconName.Length > 4 && (cupIdx >= 10000 || iconName.Remove(iconName.Length - 4) != MainWindow.Cup.defaultNames[cup.idx]))
                 {
                     finalIconName = iconName;
                 }
-                fileSW.WriteLine($"{cupIdx:X}?{finalIconName}");
+                //fileSW.WriteLine($"{cupIdx:X}?{finalIconName}");
             }
 
 
@@ -341,76 +341,81 @@ namespace Pulsar_Pack_Creator.IO
             return Result.Success;
         }
 
-        private Result WriteMainTrack(MainWindow.Cup.Track track, uint idx, string[] expertFileNames, bool isFake)
+private Result WriteMainTrack(MainWindow.Cup.Track track, uint idx, string[] expertFileNames, bool isFake)
+{
+    Result ret = WriteVariant(track.main, idx, 0, expertFileNames, isFake);
+
+    if (ret != Result.Success) return ret;
+    string[] empty = new string[4];
+    if (track.variants.Count > 0) bmgSW.WriteLine($"  {BMGIds.BMG_TRACKS + (8 << 12) + idx:X}    = {track.commonName}");
+    for (int j = 0; j < track.variants.Count; j++)
+    {
+        Cup.Track.Variant variant = track.variants[j];
+        ret = WriteVariant(variant, idx, (uint)j + 1, empty, isFake);
+        if (ret != Result.Success) return ret;
+        variantTracksList.Add(new PulsarGame.Variant(variant));
+    }
+
+    uint crc32 = 0;
+    string fileName = track.main.fileName;
+    if (buildParams != BuildParams.ConfigOnly)
+    {
+        string curFile = $"input/{fileName}.szs".ToLowerInvariant(); 
+        crc32 = BitConverter.ToUInt32(System.IO.Hashing.Crc32.Hash(File.ReadAllBytes(curFile)), 0);
+    }
+    if (!isFake)
+    {
+        string crc32Folder = "";
+        if (buildParams != BuildParams.ConfigOnly)
         {
-            Result ret = WriteVariant(track.main, idx, 0, expertFileNames, isFake);
-
-            if (ret != Result.Success) return ret;
-            string[] empty = new string[4];
-            if (track.variants.Count > 0) bmgSW.WriteLine($"  {BMGIds.BMG_TRACKS + (8 << 12) + idx:X}    = {track.commonName}");
-            for (int j = 0; j < track.variants.Count; j++)
-            {
-                Cup.Track.Variant variant = track.variants[j];
-                ret = WriteVariant(variant, idx, (uint)j + 1, empty, isFake);
-                if (ret != Result.Success) return ret;
-                variantTracksList.Add(new PulsarGame.Variant(variant));
-            }
-
-            //Finish setting the main track up
-            uint crc32 = 0;
-            string fileName = track.main.fileName;
-            if (buildParams != BuildParams.ConfigOnly)
-            {
-                string curFile = $"input/{fileName}.szs".ToLowerInvariant(); //guaranteed to exist, has been checked by writevariant
-                crc32 = BitConverter.ToUInt32(System.IO.Hashing.Crc32.Hash(File.ReadAllBytes(curFile)), 0);
-            }
-            if (!isFake)
-            {
-                string crc32Folder = "";
-                if (buildParams != BuildParams.ConfigOnly)
-                {
-                    crcToFile.WriteLine($"{track.main.trackName} = {crc32:X8}");
-                    crc32Folder = $"{modFolder}/Ghosts/{crc32:X8}".ToLowerInvariant();
-                    Directory.CreateDirectory(crc32Folder);
-                }
-
-            }
-
-            mainTracksList.Add(new PulsarGame.TrackV3(track.main, crc32, (short)track.variants.Count));
-
-            for (int mode = 0; mode < 4; mode++) //write experts
-            {
-                string expertName = expertFileNames[mode];
-                if (expertName != "RKG File" && expertName != "")
-                {
-                    if (buildParams != BuildParams.ConfigOnly)
-                    {
-                        string rkgName = $"input/{PulsarGame.ttModeFolders[mode, 1]}/{expertName}.rkg".ToLowerInvariant();
-                        if (!inputFiles.Contains(rkgName))
-                        {
-                            error = $"{rkgName}";
-                            return Result.FileNotFound;
-                        }
-                        using BigEndianReader rkg = new BigEndianReader(File.Open(rkgName, FileMode.Open));
-                        rkg.BaseStream.Position = 0xC;
-                        ushort halfC = rkg.ReadUInt16();
-                        ushort newC = (ushort)((halfC & ~(0x7F << 2)) + (0x26 << 2)); //change ghostType to expert
-
-                        rkg.BaseStream.Position = 0;
-                        byte[] rkgBytes = rkg.ReadBytes((int)(rkg.BaseStream.Length - 4)); //-4 to remove crc32
-                        using BigEndianWriter finalRkg =
-                        new BigEndianWriter(File.Create($"{modFolder}/Ghosts/Experts/{idx}_{PulsarGame.ttModeFolders[mode, 0]}.rkg"));
-                        rkgBytes[0xC] = (byte)(newC >> 8);
-                        rkgBytes[0xD] = (byte)(newC & 0xFF);
-                        finalRkg.Write(rkgBytes);
-                        int rkgCrc32 = BitConverter.ToInt32(System.IO.Hashing.Crc32.Hash(rkgBytes), 0);
-                        finalRkg.Write(rkgCrc32);
-                    }
-                    trophyCount[mode]++;
-                }
-            }
-            return Result.Success;
+            crcToFile.WriteLine($"{track.main.trackName} = {crc32:X8}");
+            crc32Folder = $"{modFolder}/Ghosts/{crc32:X8}".ToLowerInvariant();
+            Directory.CreateDirectory(crc32Folder);
         }
+    }
+
+    mainTracksList.Add(new PulsarGame.TrackV3(track.main, crc32, (short)track.variants.Count));
+
+    for (int mode = 0; mode < 4; mode++)
+    {
+        if (mode != 1) // Nur 150cc beibehalten, also 150Experts nutzen (mode == 1 entspricht 150cc)
+        {
+            continue;
+        }
+        
+        string expertName = expertFileNames[mode];
+        if (string.IsNullOrEmpty(expertName) || expertName == "RKG File")
+        {
+            expertName = fileName; // Nutze stattdessen den fileName, aber mit .rkg Endung
+        }
+        
+        if (buildParams != BuildParams.ConfigOnly)
+        {
+            string rkgName = $"input/150Experts/{expertName}.rkg".ToLowerInvariant();
+            if (!inputFiles.Contains(rkgName))
+            {
+                error = $"{rkgName}";
+                return Result.FileNotFound;
+            }
+            using BigEndianReader rkg = new BigEndianReader(File.Open(rkgName, FileMode.Open));
+            rkg.BaseStream.Position = 0xC;
+            ushort halfC = rkg.ReadUInt16();
+            ushort newC = (ushort)((halfC & ~(0x7F << 2)) + (0x26 << 2));
+
+            rkg.BaseStream.Position = 0;
+            byte[] rkgBytes = rkg.ReadBytes((int)(rkg.BaseStream.Length - 4));
+            using BigEndianWriter finalRkg = new BigEndianWriter(File.Create($"{modFolder}/Ghosts/Experts/{idx}_150cc.rkg"));
+            rkgBytes[0xC] = (byte)(newC >> 8);
+            rkgBytes[0xD] = (byte)(newC & 0xFF);
+            finalRkg.Write(rkgBytes);
+            int rkgCrc32 = BitConverter.ToInt32(System.IO.Hashing.Crc32.Hash(rkgBytes), 0);
+            finalRkg.Write(rkgCrc32);
+        }
+        trophyCount[mode]++;
+    }
+    return Result.Success;
+}
+
 
         private Result WriteVariant(MainWindow.Cup.Track.Variant variant, uint idx, uint variantIdx, string[] expertFileNames, bool isFake) //0 = main track
         {
@@ -460,7 +465,7 @@ namespace Pulsar_Pack_Creator.IO
             infoSection.info.hasUMTs = Convert.ToByte(parameters.hasUMTs);
             infoSection.info.hasFeather = Convert.ToByte(parameters.hasFeather);
             infoSection.info.hasMegaTC = Convert.ToByte(parameters.hasMegaTC);
-            infoSection.info.cupIconCount = Math.Min((ushort)100, ctsCupCount);
+            infoSection.info.cupIconCount = Math.Min((ushort)10000, ctsCupCount);
             infoSection.info.chooseNextTrackTimer = (byte)(parameters.chooseNextTrackTimer);
             infoSection.info.reservedSpace = new byte[40];
 
@@ -912,7 +917,7 @@ namespace Pulsar_Pack_Creator.IO
             xml[14] = xml[14].Replace("{$pack}", $"{parameters.modFolderName}{rand}");
             xml[19] = xml[19].Replace("{$pack}", $"{parameters.modFolderName}{rand}");
             xml[41] = xml[41].Replace("{$pack}", $"{parameters.modFolderName}{rand}");
-            File.WriteAllLines($"output/Riivolution/{parameters.modFolderName}.xml", xml);
+            File.WriteAllLines($"output/riivolution/{parameters.modFolderName}.xml", xml);
         }
 
     }

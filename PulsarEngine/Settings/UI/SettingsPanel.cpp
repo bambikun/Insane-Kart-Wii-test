@@ -4,6 +4,7 @@
 #include <Settings/UI/ExpFroomPage.hpp>
 #include <Settings/UI/ExpWFCMainPage.hpp>
 #include <SlotExpansion/CupsConfig.hpp>
+#include <MKVN.hpp>
 
 namespace Pulsar {
 namespace UI {
@@ -278,11 +279,33 @@ void SettingsPanel::SaveSettings(bool writeFile) {
 void SettingsPanel::OnBackPress(u32 hudSlotId) {
     PushButton& okButton = *this->externControls[0];
     okButton.SelectFocus();
-    this->LoadPrevMenuAndSaveSettings(okButton);
+    if(this->prevPageId == PAGE_WFC_MAIN) {
+        this->SaveSettings(true);
+        Pages::Menu::ChangeSectionById(SECTION_P1_WIFI, okButton);
+    }
+    if(this->prevPageId == PAGE_SINGLE_PLAYER_MENU) {
+        this->SaveSettings(true);
+        Pages::Menu::ChangeSectionById(SECTION_SINGLE_P_FROM_MENU, okButton);
+    }
+    else {
+        this->LoadPrevMenuAndSaveSettings(okButton);
+    }
 }
 
 void SettingsPanel::OnSaveButtonClick(PushButton& button, u32 hudSlotId) {
-    this->LoadPrevMenuAndSaveSettings(button);
+    PushButton& okButton = *this->externControls[0];
+    okButton.SelectFocus();
+    if(this->prevPageId == PAGE_WFC_MAIN) {
+        this->SaveSettings(true);
+        Pages::Menu::ChangeSectionById(SECTION_P1_WIFI, okButton);
+    }
+    if(this->prevPageId == PAGE_SINGLE_PLAYER_MENU) {
+        this->SaveSettings(true);
+        Pages::Menu::ChangeSectionById(SECTION_SINGLE_P_FROM_MENU, okButton);
+    }
+    else {        
+        this->LoadPrevMenuAndSaveSettings(button);
+    }
 }
 
 void SettingsPanel::OnRightButtonClick(PushButton& button, u32 hudSlotId) {
@@ -352,7 +375,3 @@ int SettingsPanel::GetNextBMGOffset(s32 direction) {
 
 }//namespace UI
 }//namespace Pulsar
-
-
-
-

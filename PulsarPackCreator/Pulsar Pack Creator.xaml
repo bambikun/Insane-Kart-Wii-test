@@ -94,7 +94,7 @@
 
         <Style BasedOn="{StaticResource Boxes}" TargetType="TextBox" x:Key="GhostBoxes">
             <Setter Property="Margin" Value="15,-8,15,0"/>
-            <Setter Property="Text"   Value="RKG File"/>
+            <Setter Property="Text"   Value=""/>
         </Style>
         <Style BasedOn="{StaticResource TopLabels}" TargetType="TextBlock" x:Key="GhostTopLabels">
             <Setter Property="Margin" Value="10,33,0,0"/>

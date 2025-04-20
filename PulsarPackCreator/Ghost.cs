@@ -20,7 +20,7 @@ namespace Pulsar_Pack_Creator
         private void SetExpertName(string text, int row, int col)
         {
             TextBox ghostBox = GhostGrid.Children.Cast<UIElement>().First(x => Grid.GetRow(x) == row + firstTrackRow && Grid.GetColumn(x) == col + 1) as TextBox;
-            if (text == "") ghostBox.Text = "RKG File";
+            if (text == "") ghostBox.Text = "";
             else ghostBox.Text = text;
         }
         private void OnGhostChange(object sender, TextChangedEventArgs e)
@@ -66,7 +66,7 @@ namespace Pulsar_Pack_Creator
         private void SetRegsExpertName(string text, int row, int col)
         {
             TextBox ghostBox = RegsGhostGrid.Children.Cast<UIElement>().First(x => Grid.GetRow(x) == row + firstTrackRow && Grid.GetColumn(x) == col + 1) as TextBox;
-            if (text == "" || text == null) ghostBox.Text = "RKG File";
+            if (text == "" || text == null) ghostBox.Text = "";
             else ghostBox.Text = text;
         }
 

@@ -4,6 +4,7 @@
 #include <MarioKartWii/UI/Section/SectionMgr.hpp>
 #include <Race/200ccParams.hpp>
 #include <PulsarSystem.hpp>
+#include <MKVN.hpp>
 
 //Unoptimized code which is mostly a port of Stebler's version which itself comes from CTGP's, speed factor is in the LapSpeedModifier code
 
@@ -20,19 +21,26 @@ static void CannonExitSpeed() {
 kmCall(0x805850c8, CannonExitSpeed);
 
 void EnableBrakeDrifting(Input::ControllerHolder& controllerHolder) {
-    if(System::sInstance->IsContext(PULSAR_200)) {
+    if(U8_BRAKEDRIFTING == 0x01) {
         const ControllerType controllerType = controllerHolder.curController->GetType();
         const u16 inputs = controllerHolder.inputStates[0].buttonRaw;
         u16 inputsMask = 0x700;
 
         switch(controllerType) {
+            case(!NUNCHUCK && !CLASSIC && !GCN):
+                U8_INPUT = 0x00;
+                inputsMask = 0x700;
+                break;
             case(NUNCHUCK):
+                U8_INPUT = 0x00;
                 inputsMask = 0xC04;
                 break;
             case(CLASSIC):
+                U8_INPUT = 0x01;
                 inputsMask = 0x250;
                 break;
             case(GCN):
+                U8_INPUT = 0x01;
                 inputsMask = 0x320;
                 break;
         }
@@ -60,7 +68,7 @@ kmCall(0x80521828, FixGhostBrakeDrifting);
 
 
 bool IsBrakeDrifting(const Kart::Status& status) {
-    if(System::sInstance->IsContext(PULSAR_200)) {
+    if(AntiCheat == 0x00000002) {
         u32 bitfield0 = status.bitfield0;
         const Input::ControllerHolder& controllerHolder = status.link->GetControllerHolder();
         if((bitfield0 & 0x40000) != 0 && (bitfield0 & 0x1F) == 0xF && (bitfield0 & 0x80100000) == 0
@@ -103,7 +111,7 @@ kmCall(0x806faff8, BrakeDriftingSoundWrapper);
 kmWrite32(0x80698f88, 0x60000000);
 static int BrakeEffectBikes(Effects::Player& effects) {
     const Kart::Player* kartPlayer = effects.kartPlayer;
-    if(System::sInstance->IsContext(PULSAR_200)) {
+    if(AntiCheat == 0x00000002) {
         if(IsBrakeDrifting(*kartPlayer->pointers.kartStatus)) effects.CreateAndUpdateEffectsByIdxVelocity(effects.bikeDriftEffects, 25, 26, 1);
         else effects.FollowFadeEffectsByIdxVelocity(effects.bikeDriftEffects, 25, 26, 1);
     }
@@ -114,7 +122,7 @@ kmCall(0x80698f8c, BrakeEffectBikes);
 kmWrite32(0x80698048, 0x60000000);
 static int BrakeEffectKarts(Effects::Player& effects) {
     Kart::Player* kartPlayer = effects.kartPlayer;
-    if(System::sInstance->IsContext(PULSAR_200)) {
+    if(AntiCheat == 0x00000002) {
         if(IsBrakeDrifting(*kartPlayer->pointers.kartStatus)) effects.CreateAndUpdateEffectsByIdxVelocity(effects.kartDriftEffects, 34, 36, 1);
         else effects.FollowFadeEffectsByIdxVelocity(effects.kartDriftEffects, 34, 36, 1);
     }
@@ -154,5 +162,14 @@ static Kart::WheelPhysicsHolder& FastFallingWheels(Kart::Sub& sub, u8 wheelIdx, 
     return sub.GetWheelPhysicsHolder(wheelIdx);
 };
 kmCall(0x805973a4, FastFallingWheels);
+
+void TurnInAir() {
+    U16_TURNINAIR = 0x0000;
+    if(System::sInstance->IsContext(PULSAR_200) || U16_GAMEPLAY2 == 0x0001) {
+        U16_TURNINAIR = 0x0001;
+    }
+}
+static PageLoadHook AIRTURN200CC(TurnInAir);
+
 }//namespace Race
 }//namespace Pulsar

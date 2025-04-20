@@ -10,6 +10,7 @@
 #include <Debug/Debug.hpp>
 #include <PulsarSystem.hpp>
 #include <IO/IO.hpp>
+#include <MKVN.hpp>
 
 namespace Pulsar {
 namespace Debug {
@@ -28,27 +29,32 @@ void FatalError(const char* string) {
 }
 
 #pragma suppress_warnings on
-void LaunchSoftware() { //If dolphin, restarts game, else launches Riivo->OHBC->HBC->WiiMenu
-    static const u32 titleIds[3] = { 'RIIV','LULZ', 'HBC0' };
+void LaunchSoftware() { //If dolphin, restarts game, else launches Riivo->HBC->OHBC->WiiMenu
     s32 result = IO::OpenFix("/dev/dolphin", IOS::MODE_NONE);
     if(result >= 0) {
         IOS::Close(result);
         SystemManager::Shutdown();
         return;
     }
-    char tmdPath[IOS::ipcMaxPath];
-    for(int i = 0; i < 3; ++i) {
-        u32 launchCode = 0x00010001;
-        u32 titleId = titleIds[i];
-        snprintf(tmdPath, IOS::ipcMaxPath, "/title/%8d/%8d/content/title.tmd\0", launchCode, titleId);
-        IO::OpenFix(tmdPath, IOS::MODE_NONE);
-        if(result >= 0) {
-            ISFS::Close(result);
-            OS::__LaunchTitle(launchCode, titleId);
-            return;
-        }
+    result = IO::OpenFix("/title/00010001/52494956/content/title.tmd\0", IOS::MODE_NONE); //Riivo
+    if(result >= 0) {
+        ISFS::Close(result);
+         OS::__LaunchTitle(0x00010001, 0x52494956);
+        return;
     }
-    OS::__LaunchTitle(0x1, 0x2); // Launch Wii Menu if channel isn't found
+    result = IO::OpenFix("/title/00010001/4c554c5a/content/title.tmd\0", IOS::MODE_NONE); //OHBC
+    if(result >= 0) {
+        ISFS::Close(result);
+         OS::__LaunchTitle(0x00010001, 0x4c554c5a);
+        return;
+    }
+    result = IO::OpenFix("/title/00010001/48424330/content/title.tmd\0", IOS::MODE_NONE); // If HBC can't be found try OHBC
+    if(result >= 0) {
+        ISFS::Close(result);
+         OS::__LaunchTitle(0x00010001, 0x48424330);
+        return;
+    }
+     OS::__LaunchTitle(0x1, 0x2); // Launch Wii Menu if channel isn't found
 }
 #pragma suppress_warnings reset
 
@@ -66,8 +72,8 @@ kmWrite32(0x80023948, 0x281e0007);
 //Lines on the screen and x-pos
 static void SetConsoleParams() {
     db::detail::ConsoleHead* console = EGG::Exception::console;
-    console->viewLines = 0x16;
-    console->viewPosX = 0x10;
+    console->viewLines = 0xE;
+    console->viewPosX = 0x5;
 }
 BootHook ConsoleParams(SetConsoleParams, 1);
 
@@ -107,14 +113,13 @@ static void WriteHeaderCrash(u16 error, const OS::Context* context, u32 dsisr, u
     crashError = error;
     crashThread = const_cast<OS::Thread*>(reinterpret_cast<const OS::Thread*>(context));
     db::ExceptionHead& exception = db::ExceptionHead::mInstance;
-    exception.displayedInfo = 0x23;
+    exception.displayedInfo = 0x10;
     exception.callbackArgs = nullptr;
 
     //char endMsg[512];
     //snprintf(endMsg, 512, "Press A%s and send a clip\nof the crash or the crash.pul file to the pack\ncreator to help fix the bug.\n", outcome);
-
-    db::Exception_Printf_("Press A to exit. Send crash.pul to the creator.");
-    db::PrintContext_(error, context, dsisr, dar);
+    db::Exception_Printf_("Oops. Insane Kart Wii just crashed.\n\nIf this is the first time, try to replicate it.\nIf it happened multiple times, report this\ncrash with the Crash.pul to\nToadette Hack Fan on Discord:\n\n\nhttps://discord.gg/kSyHsQGUWf\n\n\nPress A to exit and save the Crash.pul.\nWe are sorry for the inconvenience.");
+    //db::PrintContext_(error, context, dsisr, dar);
 
 }
 kmCall(0x80023484, WriteHeaderCrash);

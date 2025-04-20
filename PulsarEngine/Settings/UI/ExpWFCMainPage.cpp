@@ -2,6 +2,7 @@
 #include <MarioKartWii/RKSYS/RKSYSMgr.hpp>
 #include <Settings/UI/ExpWFCMainPage.hpp>
 #include <UI/UI.hpp>
+#include <MKVN.hpp>
 
 namespace Pulsar {
 namespace UI {
@@ -18,11 +19,12 @@ ExpWFCMain::ExpWFCMain() {
 }
 
 void ExpWFCMain::OnInit() {
+    U8_WWS_CHECK = 0x00;
     this->InitControlGroup(6); //5 controls usually + settings button
     WFCMainMenu::OnInit();
     this->AddControl(5, settingsButton, 0);
 
-    this->settingsButton.Load(UI::buttonFolder, "PULiMenuSingleTop", "Settings", 1, 0, false);
+    this->settingsButton.Load(UI::buttonFolder, "Settings1P", "Settings", 1, 0, false);
     this->settingsButton.buttonId = 5;
     this->settingsButton.SetOnClickHandler(this->onSettingsClick, 0);
     this->settingsButton.SetOnSelectHandler(this->onButtonSelectHandler);
@@ -37,6 +39,7 @@ void ExpWFCMain::OnSettingsButtonClick(PushButton& pushButton, u32 r5) {
 }
 
 void ExpWFCMain::ExtOnButtonSelect(PushButton& button, u32 hudSlotId) {
+    U8_WWS_CHECK = 0x00;
     if(button.buttonId == 5) {
         u32 bmgId = BMG_SETTINGS_BOTTOM + 1;
         if(this->topSettingsPage == PAGE_VS_TEAMS_VIEW) bmgId += 1;
@@ -55,12 +58,105 @@ ExpWFCModeSel::ExpWFCModeSel() : lastClickedButton(0) {
 }
 
 void ExpWFCModeSel::InitOTTButton(ExpWFCModeSel& self) {
-    self.InitControlGroup(6);
+    self.InitControlGroup(19);
     self.AddControl(5, self.ottButton, 0);
     self.ottButton.Load(UI::buttonFolder, "PULOTTButton", "PULOTTButton", 1, 0, 0);
     self.ottButton.buttonId = ottButtonId;
     self.ottButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
     self.ottButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+    self.AddControl(6, self.countdownButton, 0);
+    self.countdownButton.Load(UI::buttonFolder, "CountdownButton", "PULOTTButton", 1, 0, 0);
+    self.countdownButton.buttonId = countdownButtonId;
+    self.countdownButton.SetMessage(BMG_COUNTDOWN_BUTTON);
+    self.countdownButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
+    self.countdownButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+    self.AddControl(7, self.bombblastButton, 0);
+    self.bombblastButton.Load(UI::buttonFolder, "BombBlastButton", "PULOTTButton", 1, 0, 0);
+    self.bombblastButton.buttonId = bombblastButtonId;
+    self.bombblastButton.SetMessage(BMG_BOMBBLAST_BUTTON);
+    self.bombblastButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
+    self.bombblastButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+    self.AddControl(8, self.accelerationButton, 0);
+    self.accelerationButton.Load(UI::buttonFolder, "AccelerationButton", "PULOTTButton", 1, 0, 0);
+    self.accelerationButton.buttonId = accelerationButtonId;
+    self.accelerationButton.SetMessage(BMG_ACCELERATION_BUTTON);
+    self.accelerationButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
+    self.accelerationButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+    self.AddControl(9, self.bananaslipButton, 0);
+    self.bananaslipButton.Load(UI::buttonFolder, "BananaSlipButton", "PULOTTButton", 1, 0, 0);
+    self.bananaslipButton.buttonId = bananaslipButtonId;
+    self.bananaslipButton.SetMessage(BMG_BANANASLIP_BUTTON);
+    self.bananaslipButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
+    self.bananaslipButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+    self.AddControl(10, self.randomitemsButton, 0);
+    self.randomitemsButton.Load(UI::buttonFolder, "RandomItemsButton", "PULOTTButton", 1, 0, 0);
+    self.randomitemsButton.buttonId = randomitemsButtonId;
+    self.randomitemsButton.SetMessage(BMG_RANDOMITEMS_BUTTON);
+    self.randomitemsButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
+    self.randomitemsButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+    self.AddControl(11, self.unfairitemsButton, 0);
+    self.unfairitemsButton.Load(UI::buttonFolder, "UnfairItemsButton", "PULOTTButton", 1, 0, 0);
+    self.unfairitemsButton.buttonId = unfairitemsButtonId;
+    self.unfairitemsButton.SetMessage(BMG_UNFAIRITEMS_BUTTON);
+    self.unfairitemsButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
+    self.unfairitemsButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+    self.AddControl(12, self.bsmadnessButton, 0);
+    self.bsmadnessButton.Load(UI::buttonFolder, "BSMadnessButton", "PULOTTButton", 1, 0, 0);
+    self.bsmadnessButton.buttonId = bsmadnessButtonId;
+    self.bsmadnessButton.SetMessage(BMG_BSMADNESS_BUTTON);
+    self.bsmadnessButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
+    self.bsmadnessButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+    self.AddControl(13, self.mushroomdashButton, 0);
+    self.mushroomdashButton.Load(UI::buttonFolder, "MushroomDashButton", "PULOTTButton", 1, 0, 0);
+    self.mushroomdashButton.buttonId = mushroomdashButtonId;
+    self.mushroomdashButton.SetMessage(BMG_MUSHROOMDASH_BUTTON);
+    self.mushroomdashButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
+    self.mushroomdashButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+    self.AddControl(14, self.bumperkartsButton, 0);
+    self.bumperkartsButton.Load(UI::buttonFolder, "BumperKartsButton", "PULOTTButton", 1, 0, 0);
+    self.bumperkartsButton.buttonId = bumperkartsButtonId;
+    self.bumperkartsButton.SetMessage(BMG_BUMPERKARTS_BUTTON);
+    self.bumperkartsButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
+    self.bumperkartsButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+    self.AddControl(15, self.itemrampageButton, 0);
+    self.itemrampageButton.Load(UI::buttonFolder, "ItemRampageButton", "PULOTTButton", 1, 0, 0);
+    self.itemrampageButton.buttonId = itemrampageButtonId;
+    self.itemrampageButton.SetMessage(BMG_ITEMRAMPAGE_BUTTON);
+    self.itemrampageButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
+    self.itemrampageButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+    self.AddControl(16, self.itemrainButton, 0);
+    self.itemrainButton.Load(UI::buttonFolder, "ItemRainButton", "PULOTTButton", 1, 0, 0);
+    self.itemrainButton.buttonId = itemrainButtonId;
+    self.itemrainButton.SetMessage(BMG_ITEMRAIN_BUTTON);
+    self.itemrainButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
+    self.itemrainButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+    self.AddControl(17, self.shellbreakButton, 0);
+    self.shellbreakButton.Load(UI::buttonFolder, "ShellBreakButton", "PULOTTButton", 1, 0, 0);
+    self.shellbreakButton.buttonId = shellbreakButtonId;
+    self.shellbreakButton.SetMessage(BMG_SHELLBREAK_BUTTON);
+    self.shellbreakButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
+    self.shellbreakButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+    self.AddControl(18, self.booststackerButton, 0);
+    self.booststackerButton.Load(UI::buttonFolder, "BoostStackerButton", "PULOTTButton", 1, 0, 0);
+    self.booststackerButton.buttonId = booststackerButtonId;
+    self.booststackerButton.SetMessage(BMG_BOOSTSTACKER_BUTTON);
+    self.booststackerButton.SetOnClickHandler(self.onModeButtonClickHandler, 0);
+    self.booststackerButton.SetOnSelectHandler(self.onButtonSelectHandler);
+
+
 
     Text::Info info;
     RKSYS::Mgr* rksysMgr = RKSYS::Mgr::sInstance;
@@ -71,6 +167,19 @@ void ExpWFCModeSel::InitOTTButton(ExpWFCModeSel& self) {
     }
     info.intToPass[0] = vr;
     self.ottButton.SetTextBoxMessage("go", BMG_RATING, &info);
+    self.countdownButton.SetTextBoxMessage("go", BMG_RATING, &info);
+    self.bombblastButton.SetTextBoxMessage("go", BMG_RATING, &info);
+    self.accelerationButton.SetTextBoxMessage("go", BMG_RATING, &info);
+    self.bananaslipButton.SetTextBoxMessage("go", BMG_RATING, &info);
+    self.randomitemsButton.SetTextBoxMessage("go", BMG_RATING, &info);
+    self.unfairitemsButton.SetTextBoxMessage("go", BMG_RATING, &info);
+    self.bsmadnessButton.SetTextBoxMessage("go", BMG_RATING, &info);
+    self.mushroomdashButton.SetTextBoxMessage("go", BMG_RATING, &info);
+    self.bumperkartsButton.SetTextBoxMessage("go", BMG_RATING, &info);
+    self.itemrampageButton.SetTextBoxMessage("go", BMG_RATING, &info);
+    self.itemrainButton.SetTextBoxMessage("go", BMG_RATING, &info);
+    self.shellbreakButton.SetTextBoxMessage("go", BMG_RATING, &info);
+    self.booststackerButton.SetTextBoxMessage("go", BMG_RATING, &info);
 }
 kmCall(0x8064c294, ExpWFCModeSel::InitOTTButton);
 
@@ -96,6 +205,85 @@ void ExpWFCModeSel::OnActivatePatch() {
                 bmgId = UI::BMG_OTT_WW_BOTTOM;
             }
             break;
+        case countdownButtonId:
+            if(!isHidden) {
+                button = &page->countdownButton;
+                bmgId = UI::BMG_COUNTDOWN_WW_BOTTOM;
+            }
+            break;
+        case bombblastButtonId:
+            if(!isHidden) {
+                button = &page->bombblastButton;
+                bmgId = UI::BMG_BOMBBLAST_WW_BOTTOM;
+            }
+            break;
+        case accelerationButtonId:
+            if(!isHidden) {
+                button = &page->accelerationButton;
+                bmgId = UI::BMG_ACCELERATION_WW_BOTTOM;
+            }
+            break;
+        case bananaslipButtonId:
+            if(!isHidden) {
+                button = &page->bananaslipButton;
+                bmgId = UI::BMG_BANANASLIP_WW_BOTTOM;
+            }
+            break;
+            case randomitemsButtonId:
+            if(!isHidden) {
+                button = &page->randomitemsButton;
+                bmgId = UI::BMG_RANDOMITEMS_WW_BOTTOM;
+            }
+            break;
+            case unfairitemsButtonId:
+            if(!isHidden) {
+                button = &page->unfairitemsButton;
+                bmgId = UI::BMG_UNFAIRITEMS_WW_BOTTOM;
+            }
+            break;
+            case bsmadnessButtonId:
+            if(!isHidden) {
+                button = &page->bsmadnessButton;
+                bmgId = UI::BMG_BSMADNESS_WW_BOTTOM;
+            }
+            break;
+
+            case mushroomdashButtonId:
+            if(!isHidden) {
+                button = &page->mushroomdashButton;
+                bmgId = UI::BMG_MUSHROOMDASH_WW_BOTTOM;
+            }
+            break;
+            case bumperkartsButtonId:
+            if(!isHidden) {
+                button = &page->bumperkartsButton;
+                bmgId = UI::BMG_BUMPERKARTS_WW_BOTTOM;
+            }
+            break;
+        case itemrampageButtonId:
+            if(!isHidden) {
+                button = &page->itemrampageButton;
+                bmgId = UI::BMG_ITEMRAMPAGE_WW_BOTTOM;
+            }
+            break;
+        case itemrainButtonId:
+            if(!isHidden) {
+                button = &page->itemrainButton;
+                bmgId = UI::BMG_ITEMRAIN_WW_BOTTOM;
+            }
+            break;
+        case shellbreakButtonId:
+            if(!isHidden) {
+                button = &page->shellbreakButton;
+                bmgId = UI::BMG_SHELLBREAK_WW_BOTTOM;
+            }
+            break;
+        case booststackerButtonId:
+            if(!isHidden) {
+                button = &page->booststackerButton;
+                bmgId = UI::BMG_BOOSTSTACKER_WW_BOTTOM;
+            }
+            break;
     }
     page->bottomText.SetMessage(bmgId);
     button->SelectInitial(0);
@@ -106,6 +294,45 @@ void ExpWFCModeSel::OnModeButtonSelect(PushButton& modeButton, u32 hudSlotId) {
     if(modeButton.buttonId == ottButtonId) {
         this->bottomText.SetMessage(BMG_OTT_WW_BOTTOM);
     }
+    if(modeButton.buttonId == countdownButtonId) {
+        this->bottomText.SetMessage(BMG_COUNTDOWN_WW_BOTTOM);
+    }
+    if(modeButton.buttonId == bombblastButtonId) {
+        this->bottomText.SetMessage(BMG_BOMBBLAST_WW_BOTTOM);
+    }
+    if(modeButton.buttonId == accelerationButtonId) {
+        this->bottomText.SetMessage(BMG_ACCELERATION_WW_BOTTOM);
+    }
+    if(modeButton.buttonId == bananaslipButtonId) {
+        this->bottomText.SetMessage(BMG_BANANASLIP_WW_BOTTOM);
+    }
+    if(modeButton.buttonId == randomitemsButtonId) {
+        this->bottomText.SetMessage(BMG_RANDOMITEMS_WW_BOTTOM);
+    }
+    if(modeButton.buttonId == unfairitemsButtonId) {
+        this->bottomText.SetMessage(BMG_UNFAIRITEMS_WW_BOTTOM);
+    }
+    if(modeButton.buttonId == bsmadnessButtonId) {
+        this->bottomText.SetMessage(BMG_BSMADNESS_WW_BOTTOM);
+    }
+    if(modeButton.buttonId == mushroomdashButtonId) {
+        this->bottomText.SetMessage(BMG_MUSHROOMDASH_WW_BOTTOM);
+    }
+    if(modeButton.buttonId == bumperkartsButtonId) {
+        this->bottomText.SetMessage(BMG_BUMPERKARTS_WW_BOTTOM);
+    }
+    if(modeButton.buttonId == itemrampageButtonId) {
+        this->bottomText.SetMessage(BMG_ITEMRAMPAGE_WW_BOTTOM);
+    }
+    if(modeButton.buttonId == itemrainButtonId) {
+        this->bottomText.SetMessage(BMG_ITEMRAIN_WW_BOTTOM);
+    }
+    if(modeButton.buttonId == shellbreakButtonId) {
+        this->bottomText.SetMessage(BMG_SHELLBREAK_WW_BOTTOM);
+    }
+    if(modeButton.buttonId == booststackerButtonId) {
+        this->bottomText.SetMessage(BMG_BOOSTSTACKER_WW_BOTTOM);
+    }
     else WFCModeSelect::OnModeButtonSelect(modeButton, hudSlotId);
 }
 
@@ -113,9 +340,62 @@ void ExpWFCModeSel::OnModeButtonClick(PushButton& modeButton, u32 hudSlotId) {
     const u32 prevId = modeButton.buttonId;
     this->lastClickedButton = prevId;
     bool isOTT = false;
+    U8_WWS_CHECK = 0x01;
+    U16_GAMEPLAY1 = 0x0000;
+    U16_GAMEPLAY2 = 0x0000;
+    U16_GAMEPLAY3 = 0x0000;
+    U16_GAMEPLAY4 = 0x0000;
+    U16_GAMEPLAY5 = 0x0000;
+    U16_GAMEPLAY6 = 0x0000;
+    U16_GAMEPLAY7 = 0x0000;
+    U16_GAMEPLAY8 = 0x0000;
+    U16_GAMEPLAY9 = 0x0000;
+    U16_GAMEPLAYA = 0x0000;
+    U16_GAMEPLAYB = 0x0000;
+    U16_GAMEPLAYC = 0x0000;
+    U16_GAMEPLAYD = 0x0000;
+    U16_GAMEPLAYE = 0x0000;
     if(prevId == ottButtonId) {
-        isOTT = true;
-        modeButton.buttonId = 1;
+        U16_GAMEPLAYE = 0x0001;
+    }
+    if(prevId == countdownButtonId) {
+        U16_GAMEPLAYC = 0x0001;
+    }
+    if(prevId == bombblastButtonId) {
+        U16_GAMEPLAY1 = 0x0001;
+    }
+    if(prevId == accelerationButtonId) {
+        U16_GAMEPLAY2 = 0x0001;
+    }
+    if(prevId == bananaslipButtonId) {
+        U16_GAMEPLAY3 = 0x0001;
+    }
+    if(prevId == randomitemsButtonId) {
+        U16_GAMEPLAY4 = 0x0001;
+    }
+    if(prevId == unfairitemsButtonId) {
+        U16_GAMEPLAY5 = 0x0001;
+    }
+    if(prevId == bsmadnessButtonId) {
+        U16_GAMEPLAY6 = 0x0001;
+    }
+    if(prevId == mushroomdashButtonId) {
+        U16_GAMEPLAY7 = 0x0001;
+    }
+    if(prevId == bumperkartsButtonId) {
+        U16_GAMEPLAY8 = 0x0001;
+    }
+    if(prevId == itemrampageButtonId) {
+        U16_GAMEPLAY9 = 0x0001;
+    }
+    if(prevId == itemrainButtonId) {
+        U16_GAMEPLAYA = 0x0001;
+    }
+    if(prevId == shellbreakButtonId) {
+        U16_GAMEPLAYB = 0x0001;
+    }
+    if(prevId == booststackerButtonId) {
+        U16_GAMEPLAYD = 0x0001;
     }
     System::sInstance->netMgr.ownStatusData = isOTT;
     WFCModeSelect::OnModeButtonClick(modeButton, hudSlotId);

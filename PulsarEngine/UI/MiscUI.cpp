@@ -10,6 +10,7 @@
 #include <Gamemodes/KO/KORaceEndPage.hpp>
 #include <Debug/Debug.hpp>
 #include <UI/UI.hpp>
+#include <MKVN.hpp>
 
 
 
@@ -19,9 +20,6 @@ namespace UI {
 //No ghost saving on RKSYS
 kmWrite32(0x8054913C, 0x60000000);
 kmWrite32(0x80855f48, 0x48000148);
-
-//BMG size patch (Diamond)
-kmWrite32(0x8007B37C, 0x38000128);
 
 static PageId AfterWifiResults(PageId id) {
     const SectionMgr* sectionMgr = SectionMgr::sInstance;
@@ -35,7 +33,6 @@ static PageId AfterWifiResults(PageId id) {
     return id;
 }
 kmBranch(0x80646754, AfterWifiResults);
-
 
 //Credit to Kazuki for making the original ASM code, and Brawlbox for porting it to C++
 static void LaunchRiivolutionButton(SectionMgr* sectionMgr) {
@@ -88,7 +85,7 @@ kmCall(0x805dd90c, CustomRoomDenyText);
 SectionParams& FavouriteCombo(SectionParams& params) {
     const RKSYS::Mgr* rksysMgr = RKSYS::Mgr::sInstance;
     s32 curLicense = rksysMgr->curLicenseId;
-    if (curLicense >= 0) {
+    if (curLicense >= 0 && U16_CHARACTER == 0x0001) {
         const RKSYS::LicenseMgr& license = rksysMgr->licenses[curLicense];
         CharacterId favChar = license.GetFavouriteCharacter();
         KartId favKart = license.GetFavouriteKart();

@@ -5,6 +5,7 @@
 #include <MarioKartWii/GlobalFunctions.hpp>
 #include <MarioKartWii/Driver/DriverManager.hpp>
 #include <Settings/Settings.hpp>
+#include <MKVN.hpp>
 
 namespace Pulsar {
 namespace Race {
@@ -85,8 +86,10 @@ static void BattleGlitchEnable() {
 }
 RaceFrameHook BattleGlitch(BattleGlitchEnable);
 
-kmWrite32(0x8085C914, 0x38000000); //times at the end of races in VS
 static void DisplayTimesInsteadOfNames(CtrlRaceResult& result, u8 id) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FINISH_TIMES) == FINISH_TIMES_DISABLED)
+    result.FillName(id);
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FINISH_TIMES) == FINISH_TIMES_ENABLED)
     result.FillFinishTime(id);
 }
 kmCall(0x8085d460, DisplayTimesInsteadOfNames); //for WWs
@@ -104,17 +107,6 @@ kmBranch(0x807ae8ac, DraggableBlueShells);
 
 //Coloured Minimap
 kmWrite32(0x807DFC24, 0x60000000);
-
-//No Team Invincibility
-kmWrite32(0x8056fd24, 0x38000000); //KartCollision::CheckKartCollision()
-kmWrite32(0x80572618, 0x38000000); //KartCollision::CheckItemCollision()
-kmWrite32(0x80573290, 0x38000000); //KartCollision::HandleFIBCollision()
-kmWrite32(0x8068e2d0, 0x38000000); //PlayerEffects ctor
-kmWrite32(0x8068e314, 0x38000000); //PlayerEffects ctor
-kmWrite32(0x807a7f6c, 0x38c00000); //FIB are always red
-kmWrite32(0x807b0bd4, 0x38000000); //pass TC to teammate
-kmWrite32(0x807bd2bc, 0x38000000); //RaceGlobals
-kmWrite32(0x807f18c8, 0x38000000); //TC alert
 
 //Accurate Explosion Damage (MrBean, CLF)
 kmWrite16(0x80572690, 0x4800);
