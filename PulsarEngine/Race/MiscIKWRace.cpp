@@ -145,37 +145,6 @@ loc_0x30:
 }
 kmCall(0x808288B8, ItemRespawn);
 
-asmFunc RespawnBoostOnline() {
-  lwz       r4, 0x0(r3);
-  lwz       r4, 0x3C(r4);
-  cmpwi     r4, 0;
-  beq-      loc_0x20;
-  lwz       r4, 0x10(r4);
-  lwz       r5, 0x10(r4);
-  xoris     r5, r5, 0x4000;
-  stw       r5, 0x10(r4);
-
-loc_0x20:
-  li        r4, 0x3;
-}
-kmCall(0x80581E40, RespawnBoostOnline);
-kmCall(0x805820B0, RespawnBoostOnline);
-
-asmFunc StuckPlayersFix() {
-  lwz       r11, 0x8(r4);
-  rlwinm.   r12,r11,0,21,21;
-  beq-      loc_0x20;
-  lha       r0, 0x56(r31);
-  cmpwi     r0, 0x52;
-  blt-      loc_0x20;
-  rlwinm    r11,r11,0,22,20;
-  stw       r11, 0x8(r4);
-
-loc_0x20:
-  mr        r4, r11;
-}
-kmCall(0x8058BF58, StuckPlayersFix);
-
 //Motion Sensor Bombs
 kmWrite16(0x807A5BF6, 0x0FFF);
 kmWrite16(0x807A4ACA, 0x0FFF);
@@ -232,6 +201,9 @@ loc_0x54:
   fmuls     f0, f0, f3;
 }
 kmCall(0x805B5208, GravityAreas);*/
+
+
+
 
 //Mii Outfit C
 }//namespace IKW

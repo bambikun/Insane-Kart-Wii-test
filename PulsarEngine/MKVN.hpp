@@ -7,6 +7,7 @@
 #include <MarioKartWii/System/Identifiers.hpp>
 #include <MarioKartWii/Race/RaceData.hpp>
 
+extern u8 GameModeOnline;
 extern u8 REGION;
 extern u32 TTS_CHECK;
 extern u32 U32_RBBG_HOOK_PT1;
@@ -25,7 +26,7 @@ extern u16 U16_CONTROLLER;
 extern u16 U16_MINIMAPITEMS;
 extern u16 U16_MISSION;
 extern u16 U16_STAR;
-extern u32 U32_RUBBERBANDING;
+extern u16 U32_RUBBERBANDING;
 extern u16 U16_LAKITU;
 extern u16 U16_NOVOICE;
 extern u16 U16_BANANAS;
@@ -37,7 +38,9 @@ extern u16 U16_FOV;
 extern u16 U16_CPUS;
 extern u16 U16_LUMA;
 extern u16 U16_FONT;
+extern u32 AntiCheat4;
 extern u16 U16_EFFECTS;
+extern u32 CodeHandlerIKW;
 extern u16 U16_MENU_SOUNDS;
 extern u16 U16_WINGS;
 extern u8 U8_BRAKEDRIFTING;
@@ -81,6 +84,7 @@ extern u16 U16_TURNINAIR;
 extern u16 U16_GAMEPLAYA;
 extern u16 U16_GAMEPLAYB;
 extern u16 U16_GAMEPLAYC;
+extern u16 U16_GAMEPLAYC2;
 extern u16 U16_GAMEPLAYD;
 extern u16 U16_GAMEPLAYE;
 extern u8 U8_INPUT_VIEW;
@@ -111,6 +115,9 @@ extern u8 U8_BLUE6;
 extern u8 U8_ALPHA6;
 extern u8 U8_WWS_CHECK;
 extern u16 U16_WAITING;
+extern u16 WiiInput;
+extern u16 GCInput;
+extern u16 ClassicInput;
 
 extern u32 U32_MARIO;
 extern u32 U32_TOADETTE;
@@ -163,8 +170,35 @@ extern u8 U8_LUIGI;
 extern u8 U8_BABY_DAISY;
 extern u8 U8_KOOPA_TROOPA;
 extern u8 U8_PEACH;
-extern u8 U8_INPUT;
 
+extern u8 U8_BUTTONS_WII;
+extern u8 U8_BUTTONS_GCN;
+extern u32 ItemCycler3;
+extern u32 RacerCount;
+extern u16 U16_FAST_MENUS;
+extern u16 U16_MISSION_MUSIC;
+extern u32 GeckoLoader;
+extern u8 U8_INPUT;
+extern u8 U8_OFFLINE_FLAG;
+extern u16 U16_TRACK_MANIA;
 extern u32 U32_TEST_IDS;
+extern u32 U32_AUTHOR_IDS;
+extern u32 U32_MISSION_MODE_ENABLE;
+extern u8 OfflineFlag_GameMode;
+extern u16 U16_FREE_ROAM;
+extern u8 U8_RACE_MENUS1;
+extern u8 U8_RACE_MENUS2;
+extern u8 U8_RACE_MENUS3;
+extern u8 U8_MENUSINGLE1;
+extern u8 U8_MENUSINGLE2;
+extern u8 U8_MENUSINGLE3;
+extern u8 U8_MENUSINGLE4;
+extern u8 U8_MENUSINGLE5;
+extern u8 U8_MENUMULTI1;
+extern u8 U8_MENUMULTI2;
+extern u8 U8_MENUMULTI3;
+extern u8 U8_MENUMULTI4;
+extern u8 U8_FONT;
+extern u16 U16_MISSION_MODE_FIX;
 
 #endif

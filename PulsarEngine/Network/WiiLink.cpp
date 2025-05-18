@@ -5,13 +5,12 @@
 #include <core/rvl/DWC/NHTTP.hpp>
 #include <core/rvl/ipc/ipc.hpp>
 #include <kamek.hpp>
-#include <MKVN.hpp>
 
 #ifndef _WIILINK_
 #define _WIILINK_
 
 static u8 s_payloadBlock[PAYLOAD_BLOCK_SIZE + 0x20];
-static void *s_payload = 0;
+static void *s_payload = nullptr;
 static bool s_payloadReady = false;
 static u8 s_saltHash[SHA256_DIGEST_SIZE];
 
@@ -114,9 +113,9 @@ s32 HandleResponse(u8 *block)
     {
         asm(dcbf i, payload; sync; icbi i, payload; isync;);
     }
-        
+    /*    
     // Disable unnecessary patches
-    /* u32 patchMask = WWFC_PATCH_LEVEL_CRITICAL | WWFC_PATCH_LEVEL_BUGFIX |
+    u32 patchMask = WWFC_PATCH_LEVEL_CRITICAL | WWFC_PATCH_LEVEL_BUGFIX |
                     WWFC_PATCH_LEVEL_SUPPORT;
     for (wwfc_patch *patch = reinterpret_cast<wwfc_patch*>(
                         block + payload->info.patch_list_offset
@@ -132,7 +131,7 @@ s32 HandleResponse(u8 *block)
 
         // Otherwise disable the patch
         patch->level |= WWFC_PATCH_LEVEL_DISABLED;
-    } */
+    }*/
         
     s32 (*entryFunction)(wwfc_payload *) =
         reinterpret_cast<s32 (*)(wwfc_payload *)>(
@@ -141,14 +140,9 @@ s32 HandleResponse(u8 *block)
     return entryFunction(payload);
 }
 
-void ConnectionBlocker() {
-    if(CodeHandlerIKW != 0x3C6000D0) s_auth_error = -1;
-}
-static PageLoadHook NOCONNECT(ConnectionBlocker);
-
 void OnPayloadReceived(s32 result, void *response, void *userdata)
 {
-    if (response == 0)
+    if (response == nullptr)
     {
         return;
     }
@@ -217,7 +211,7 @@ kmBranchDefCpp(
     void *request = NHTTPCreateRequest(
         url, 0, s_payload, PAYLOAD_BLOCK_SIZE, OnPayloadReceived, 0);
 
-    if (request == 0)
+    if (request == nullptr)
     {
         s_auth_error = WL_ERROR_PAYLOAD_STAGE1_MAKE_REQUEST;
         return;

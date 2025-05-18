@@ -75,33 +75,17 @@ UIControl* ExpCupSelect::CreateControl(u32 controlId) {
 }
 
 void ExpCupSelect::OnRightArrowSelect(SheetSelectControl& control, u32 hudSlotId) {
-    if(U8_MENU == 0x01) {
-    this->OnArrowSelect(2);
-    }
-    else if(U8_MENU == 0x02) {
-    this->OnArrowSelect(4);
-    }
-    else if(U8_MENU == 0x03) {
-    this->OnArrowSelect(6);
-    }
-    else if(U8_MENU == 0x04) {
-    this->OnArrowSelect(8);
-    }
+    if(U8_MENU == 0x01) this->OnArrowSelect(2);
+    if(U8_MENU == 0x02) this->OnArrowSelect(4);
+    if(U8_MENU == 0x03) this->OnArrowSelect(6);
+    if(U8_MENU == 0x04) this->OnArrowSelect(8);
 }
 
 void ExpCupSelect::OnLeftArrowSelect(SheetSelectControl& control, u32 hudSlotId) {
-    if(U8_MENU == 0x01) {
-    this->OnArrowSelect(-2);
-    }
-    else if(U8_MENU == 0x02) {
-    this->OnArrowSelect(-4);
-    }
-    else if(U8_MENU == 0x03) {
-    this->OnArrowSelect(-6);
-    }
-    else if(U8_MENU == 0x04) {
-    this->OnArrowSelect(-8);
-    }
+    if(U8_MENU == 0x01) this->OnArrowSelect(-2);
+    if(U8_MENU == 0x02) this->OnArrowSelect(-4);
+    if(U8_MENU == 0x03) this->OnArrowSelect(-6);
+    if(U8_MENU == 0x04) this->OnArrowSelect(-8);
 }
 
 void ExpCupSelect::OnArrowSelect(s32 direction) {

@@ -105,9 +105,10 @@ namespace Discord {
                 break;
             case SECTION_TT:
                 details = "In Time Trials";
+                if(U16_FREE_ROAM == 0x0001) details = "In Free Roam";
                 break;
             case SECTION_P1VS:
-            if(U16_GAMEPLAY1 == 0x0000 && U16_GAMEPLAY2 == 0x0000 && U16_GAMEPLAY3 == 0x0000 && U16_GAMEPLAY4 == 0x0000 && U16_GAMEPLAY5 == 0x0000 && U16_GAMEPLAY6 == 0x0000 && U16_GAMEPLAY7 == 0x0000 && U16_GAMEPLAY8 == 0x0000 && U16_GAMEPLAY9 == 0x0000 && U16_GAMEPLAYA == 0x0000 && U16_GAMEPLAYB == 0x0000 && U16_GAMEPLAYC == 0x0000 && U16_GAMEPLAYD == 0x0000 && U16_GAMEPLAYE == 0x0000) details = "In a 1P VS (Default)";
+            details = "In a 1P VS (Default)";
             if(U16_GAMEPLAY1 == 0x0001) details = "In a 1P VS (Bob-omb Blast)";
             if(U16_GAMEPLAY2 == 0x0001) details = "In a 1P VS (Infinite Acceleration)";
             if(U16_GAMEPLAY3 == 0x0001) details = "In a 1P VS (Banana Slip)";
@@ -124,7 +125,7 @@ namespace Discord {
             if(U16_GAMEPLAYE == 0x0001) details = "In a 1P VS (Ultras Allowed)";
                 break;
             case SECTION_P2VS:
-            if(U16_GAMEPLAY1 == 0x0000 && U16_GAMEPLAY2 == 0x0000 && U16_GAMEPLAY3 == 0x0000 && U16_GAMEPLAY4 == 0x0000 && U16_GAMEPLAY5 == 0x0000 && U16_GAMEPLAY6 == 0x0000 && U16_GAMEPLAY7 == 0x0000 && U16_GAMEPLAY8 == 0x0000 && U16_GAMEPLAY9 == 0x0000 && U16_GAMEPLAYA == 0x0000 && U16_GAMEPLAYB == 0x0000 && U16_GAMEPLAYC == 0x0000 && U16_GAMEPLAYD == 0x0000 && U16_GAMEPLAYE == 0x0000) details = "In a 2P VS (Default)";
+            details = "In a 2P VS (Default)";
             if(U16_GAMEPLAY1 == 0x0001) details = "In a 2P VS (Bob-omb Blast)";
             if(U16_GAMEPLAY2 == 0x0001) details = "In a 2P VS (Infinite Acceleration)";
             if(U16_GAMEPLAY3 == 0x0001) details = "In a 2P VS (Banana Slip)";
@@ -141,7 +142,7 @@ namespace Discord {
             if(U16_GAMEPLAYE == 0x0001) details = "In a 2P VS (Ultras Allowed)";
                 break;
             case SECTION_P3VS:
-            if(U16_GAMEPLAY1 == 0x0000 && U16_GAMEPLAY2 == 0x0000 && U16_GAMEPLAY3 == 0x0000 && U16_GAMEPLAY4 == 0x0000 && U16_GAMEPLAY5 == 0x0000 && U16_GAMEPLAY6 == 0x0000 && U16_GAMEPLAY7 == 0x0000 && U16_GAMEPLAY8 == 0x0000 && U16_GAMEPLAY9 == 0x0000 && U16_GAMEPLAYA == 0x0000 && U16_GAMEPLAYB == 0x0000 && U16_GAMEPLAYC == 0x0000 && U16_GAMEPLAYD == 0x0000 && U16_GAMEPLAYE == 0x0000) details = "In a 3P VS (Default)";
+            details = "In a 3P VS (Default)";
             if(U16_GAMEPLAY1 == 0x0001) details = "In a 3P VS (Bob-omb Blast)";
             if(U16_GAMEPLAY2 == 0x0001) details = "In a 3P VS (Infinite Acceleration)";
             if(U16_GAMEPLAY3 == 0x0001) details = "In a 3P VS (Banana Slip)";
@@ -158,7 +159,7 @@ namespace Discord {
             if(U16_GAMEPLAYE == 0x0001) details = "In a 3P VS (Ultras Allowed)";
                 break;
             case SECTION_P4VS:
-            if(U16_GAMEPLAY1 == 0x0000 && U16_GAMEPLAY2 == 0x0000 && U16_GAMEPLAY3 == 0x0000 && U16_GAMEPLAY4 == 0x0000 && U16_GAMEPLAY5 == 0x0000 && U16_GAMEPLAY6 == 0x0000 && U16_GAMEPLAY7 == 0x0000 && U16_GAMEPLAY8 == 0x0000 && U16_GAMEPLAY9 == 0x0000 && U16_GAMEPLAYA == 0x0000 && U16_GAMEPLAYB == 0x0000 && U16_GAMEPLAYC == 0x0000 && U16_GAMEPLAYD == 0x0000 && U16_GAMEPLAYE == 0x0000) details = "In a 4P VS (Default)";
+            details = "In a 4P VS (Default)";
             if(U16_GAMEPLAY1 == 0x0001) details = "In a 4P VS (Bob-omb Blast)";
             if(U16_GAMEPLAY2 == 0x0001) details = "In a 4P VS (Infinite Acceleration)";
             if(U16_GAMEPLAY3 == 0x0001) details = "In a 4P VS (Banana Slip)";
@@ -175,7 +176,7 @@ namespace Discord {
             if(U16_GAMEPLAYE == 0x0001) details = "In a 4P VS (Ultras Allowed)";
                 break;
             case SECTION_P1TEAM_VS:
-            if(U16_GAMEPLAY1 == 0x0000 && U16_GAMEPLAY2 == 0x0000 && U16_GAMEPLAY3 == 0x0000 && U16_GAMEPLAY4 == 0x0000 && U16_GAMEPLAY5 == 0x0000 && U16_GAMEPLAY6 == 0x0000 && U16_GAMEPLAY7 == 0x0000 && U16_GAMEPLAY8 == 0x0000 && U16_GAMEPLAY9 == 0x0000 && U16_GAMEPLAYA == 0x0000 && U16_GAMEPLAYB == 0x0000 && U16_GAMEPLAYC == 0x0000 && U16_GAMEPLAYD == 0x0000 && U16_GAMEPLAYE == 0x0000) details = "In a 1P Team VS (Default)";
+            details = "In a 1P Team VS (Default)";
             if(U16_GAMEPLAY1 == 0x0001) details = "In a 1P Team VS (Bob-omb Blast)";
             if(U16_GAMEPLAY2 == 0x0001) details = "In a 1P Team VS (Infinite Acceleration)";
             if(U16_GAMEPLAY3 == 0x0001) details = "In a 1P Team VS (Banana Slip)";
@@ -192,7 +193,7 @@ namespace Discord {
             if(U16_GAMEPLAYE == 0x0001) details = "In a 1P Team VS (Ultras Allowed)";
                 break;
             case SECTION_P2TEAM_VS:
-            if(U16_GAMEPLAY1 == 0x0000 && U16_GAMEPLAY2 == 0x0000 && U16_GAMEPLAY3 == 0x0000 && U16_GAMEPLAY4 == 0x0000 && U16_GAMEPLAY5 == 0x0000 && U16_GAMEPLAY6 == 0x0000 && U16_GAMEPLAY7 == 0x0000 && U16_GAMEPLAY8 == 0x0000 && U16_GAMEPLAY9 == 0x0000 && U16_GAMEPLAYA == 0x0000 && U16_GAMEPLAYB == 0x0000 && U16_GAMEPLAYC == 0x0000 && U16_GAMEPLAYD == 0x0000 && U16_GAMEPLAYE == 0x0000) details = "In a 2P Team VS (Default)";
+            details = "In a 2P Team VS (Default)";
             if(U16_GAMEPLAY1 == 0x0001) details = "In a 2P Team VS (Bob-omb Blast)";
             if(U16_GAMEPLAY2 == 0x0001) details = "In a 2P Team VS (Infinite Acceleration)";
             if(U16_GAMEPLAY3 == 0x0001) details = "In a 2P Team VS (Banana Slip)";
@@ -209,7 +210,7 @@ namespace Discord {
             if(U16_GAMEPLAYE == 0x0001) details = "In a 2P Team VS (Ultras Allowed)";
                 break;
             case SECTION_P3TEAM_VS:
-            if(U16_GAMEPLAY1 == 0x0000 && U16_GAMEPLAY2 == 0x0000 && U16_GAMEPLAY3 == 0x0000 && U16_GAMEPLAY4 == 0x0000 && U16_GAMEPLAY5 == 0x0000 && U16_GAMEPLAY6 == 0x0000 && U16_GAMEPLAY7 == 0x0000 && U16_GAMEPLAY8 == 0x0000 && U16_GAMEPLAY9 == 0x0000 && U16_GAMEPLAYA == 0x0000 && U16_GAMEPLAYB == 0x0000 && U16_GAMEPLAYC == 0x0000 && U16_GAMEPLAYD == 0x0000 && U16_GAMEPLAYE == 0x0000) details = "In a 3P Team VS (Default)";
+            details = "In a 3P Team VS (Default)";
             if(U16_GAMEPLAY1 == 0x0001) details = "In a 3P Team VS (Bob-omb Blast)";
             if(U16_GAMEPLAY2 == 0x0001) details = "In a 3P Team VS (Infinite Acceleration)";
             if(U16_GAMEPLAY3 == 0x0001) details = "In a 3P Team VS (Banana Slip)";
@@ -226,7 +227,7 @@ namespace Discord {
             if(U16_GAMEPLAYE == 0x0001) details = "In a 3P Team VS (Ultras Allowed)";
                 break;
             case SECTION_P4TEAM_VS:
-            if(U16_GAMEPLAY1 == 0x0000 && U16_GAMEPLAY2 == 0x0000 && U16_GAMEPLAY3 == 0x0000 && U16_GAMEPLAY4 == 0x0000 && U16_GAMEPLAY5 == 0x0000 && U16_GAMEPLAY6 == 0x0000 && U16_GAMEPLAY7 == 0x0000 && U16_GAMEPLAY8 == 0x0000 && U16_GAMEPLAY9 == 0x0000 && U16_GAMEPLAYA == 0x0000 && U16_GAMEPLAYB == 0x0000 && U16_GAMEPLAYC == 0x0000 && U16_GAMEPLAYD == 0x0000 && U16_GAMEPLAYE == 0x0000) details = "In a 4P Team VS (Default)";
+            details = "In a 4P Team VS (Default)";
             if(U16_GAMEPLAY1 == 0x0001) details = "In a 4P Team VS (Bob-omb Blast)";
             if(U16_GAMEPLAY2 == 0x0001) details = "In a 4P Team VS (Infinite Acceleration)";
             if(U16_GAMEPLAY3 == 0x0001) details = "In a 4P Team VS (Banana Slip)";
@@ -304,7 +305,7 @@ namespace Discord {
                 break;
             case SECTION_P1_WIFI_VS:
             case SECTION_P2_WIFI_VS:
-            if(U16_GAMEPLAY1 == 0x0000 && U16_GAMEPLAY2 == 0x0000 && U16_GAMEPLAY3 == 0x0000 && U16_GAMEPLAY4 == 0x0000 && U16_GAMEPLAY5 == 0x0000 && U16_GAMEPLAY6 == 0x0000 && U16_GAMEPLAY7 == 0x0000 && U16_GAMEPLAY8 == 0x0000 && U16_GAMEPLAY9 == 0x0000 && U16_GAMEPLAYA == 0x0000 && U16_GAMEPLAYB == 0x0000 && U16_GAMEPLAYC == 0x0000 && U16_GAMEPLAYD == 0x0000 && U16_GAMEPLAYE == 0x0000) details = "In a WiFi VS (Default)";
+            details = "In a WiFi VS (Default)";
             if(U16_GAMEPLAY1 == 0x0001) details = "In a WiFi VS (Bob-omb Blast)";
             if(U16_GAMEPLAY2 == 0x0001) details = "In a WiFi VS (Infinite Acceleration)";
             if(U16_GAMEPLAY3 == 0x0001) details = "In a WiFi VS (Banana Slip)";
@@ -326,7 +327,7 @@ namespace Discord {
                 break;
             case SECTION_P1_WIFI_FRIEND_VS:
             case SECTION_P2_WIFI_FRIEND_VS:
-            if(U16_GAMEPLAY1 == 0x0000 && U16_GAMEPLAY2 == 0x0000 && U16_GAMEPLAY3 == 0x0000 && U16_GAMEPLAY4 == 0x0000 && U16_GAMEPLAY5 == 0x0000 && U16_GAMEPLAY6 == 0x0000 && U16_GAMEPLAY7 == 0x0000 && U16_GAMEPLAY8 == 0x0000 && U16_GAMEPLAY9 == 0x0000 && U16_GAMEPLAYA == 0x0000 && U16_GAMEPLAYB == 0x0000 && U16_GAMEPLAYC == 0x0000 && U16_GAMEPLAYD == 0x0000 && U16_GAMEPLAYE == 0x0000) details = "In a WiFi Friend VS (Default)";
+            details = "In a WiFi Friend VS (Default)";
             if(U16_GAMEPLAY1 == 0x0001) details = "In a WiFi Friend VS (Bob-omb Blast)";
             if(U16_GAMEPLAY2 == 0x0001) details = "In a WiFi Friend VS (Infinite Acceleration)";
             if(U16_GAMEPLAY3 == 0x0001) details = "In a WiFi Friend VS (Banana Slip)";
@@ -344,7 +345,7 @@ namespace Discord {
                 break;
             case SECTION_P1_WIFI_FRIEND_TEAMVS:
             case SECTION_P2_WIFI_FRIEND_TEAMVS:
-            if(U16_GAMEPLAY1 == 0x0000 && U16_GAMEPLAY2 == 0x0000 && U16_GAMEPLAY3 == 0x0000 && U16_GAMEPLAY4 == 0x0000 && U16_GAMEPLAY5 == 0x0000 && U16_GAMEPLAY6 == 0x0000 && U16_GAMEPLAY7 == 0x0000 && U16_GAMEPLAY8 == 0x0000 && U16_GAMEPLAY9 == 0x0000 && U16_GAMEPLAYA == 0x0000 && U16_GAMEPLAYB == 0x0000 && U16_GAMEPLAYC == 0x0000 && U16_GAMEPLAYD == 0x0000 && U16_GAMEPLAYE == 0x0000) details = "In a WiFi Friend Team VS (Default)";
+            details = "In a WiFi Friend Team VS (Default)";
             if(U16_GAMEPLAY1 == 0x0001) details = "In a WiFi Friend Team VS (Bob-omb Blast)";
             if(U16_GAMEPLAY2 == 0x0001) details = "In a WiFi Friend Team VS (Infinite Acceleration)";
             if(U16_GAMEPLAY3 == 0x0001) details = "In a WiFi Friend Team VS (Banana Slip)";

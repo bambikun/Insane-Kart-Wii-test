@@ -153,6 +153,7 @@ s32 CheckBRSTM(const nw4r::snd::DVDSoundArchive* archive, PulsarId id, u8 varian
         if(id == 0x107E) snprintf(pulPath, 0x50, "%sstrm/WTM%s.brstm", root, lapSpecifier);
         if(id == 0x1074 || id == 0x1073) snprintf(pulPath, 0x50, "%sstrm/WWP%s.brstm", root, lapSpecifier);
         if(id == 0x1095) snprintf(pulPath, 0x50, "%sstrm/WWW%s.brstm", root, lapSpecifier);
+        if(U16_MISSION_MODE_FIX == 0x0001) snprintf(pulPath, 0x50, "%sstrm/MR%s.brstm", root, lapSpecifier);
         U32_TEST_IDS = id;
         ret = DVD::ConvertPathToEntryNum(pulPath);
     }
@@ -166,7 +167,8 @@ nw4r::ut::FileStream* MusicSlotsExpand(nw4r::snd::DVDSoundArchive* archive, void
     const CupsConfig* cupsConfig = CupsConfig::sInstance;
     const PulsarId track = cupsConfig->GetWinning();
 
-    if((firstChar == 'n' || firstChar == 'S' || firstChar == 'r') && (U8_BRSTMS == 0x01)) {
+    if(U8_BRSTMS == 0x01 || U16_MISSION_MODE_FIX == 0x0001) {
+        if((firstChar == 'n' || firstChar == 'S' || firstChar == 'r')) {
         const SectionId section = SectionMgr::sInstance->curSection->sectionId;
         register SoundIDs toPlayId;
         asm(mr toPlayId, r20;);
@@ -193,6 +195,7 @@ nw4r::ut::FileStream* MusicSlotsExpand(nw4r::snd::DVDSoundArchive* archive, void
             }
             if(found) extFilePath = pulPath;
         }
+    }
     }
     return archive->OpenExtStream(buffer, size, extFilePath, 0, length);
 }

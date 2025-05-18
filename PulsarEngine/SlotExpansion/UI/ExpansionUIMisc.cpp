@@ -8,6 +8,7 @@
 #include <SlotExpansion/CupsConfig.hpp>
 #include <SlotExpansion/UI/ExpCupSelect.hpp>
 #include <SlotExpansion/UI/ExpansionUIMisc.hpp>
+#include <MKVN.hpp>
 
 
 namespace Pulsar {
@@ -69,7 +70,8 @@ static void SetVSIntroBmgId(LayoutUIControl* trackName) {
     if (bmgId < BMG_TRACKS) authorId = BMG_NINTENDO;
     else authorId = bmgId + BMG_AUTHORS - BMG_TRACKS;
     info.bmgToPass[1] = authorId;
-    trackName->SetMessage(BMG_INFO_DISPLAY, &info);
+    if(U16_MISSION_MODE_FIX == 0x0001) trackName->SetMessage(BMG_MISSION_CAM, &info);
+    else trackName->SetMessage(BMG_INFO_DISPLAY, &info);
 }
 kmCall(0x808552cc, SetVSIntroBmgId);
 

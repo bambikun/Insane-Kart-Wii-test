@@ -1,4 +1,5 @@
 #include <kamek.hpp>
+#include <MKVN.hpp>
 namespace Pulsar {
 namespace UI {
 
@@ -38,6 +39,21 @@ kmWrite32(0x8064DB2C, 0x60000000);
 //Game Mode Selection Menu (Toadette Hack Fan)
 kmWrite8(0x80899ACA, 0x00000058);
 kmWrite8(0x80899AF7, 0x00000058);
+
+//Skip Strap
+kmWrite32(0x800077C8, 0x4E800020);
+
+//Disable BackModel by loading a different one (Toadette Hack Fan)
+kmWrite8(0x80890511, 0x4B);
+
+//Fix Buttons in Single Player
+kmWrite8(0x808AE223, 0x54);
+
+//No Character Models
+kmWrite8(0x808904F6, 0x73);
+
+//No UNABLE TO CREATE A GHOST Text
+kmWrite32(0x80857AA0, 0x60000000);
 
 }//namespace UI
 }//namespace Pulsar

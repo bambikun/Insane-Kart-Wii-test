@@ -3,6 +3,7 @@
 #include <Settings/UI/ExpWFCMainPage.hpp>
 #include <UI/UI.hpp>
 #include <MKVN.hpp>
+#include <PulsarSystem.hpp>
 
 namespace Pulsar {
 namespace UI {
@@ -339,7 +340,6 @@ void ExpWFCModeSel::OnModeButtonSelect(PushButton& modeButton, u32 hudSlotId) {
 void ExpWFCModeSel::OnModeButtonClick(PushButton& modeButton, u32 hudSlotId) {
     const u32 prevId = modeButton.buttonId;
     this->lastClickedButton = prevId;
-    bool isOTT = false;
     U8_WWS_CHECK = 0x01;
     U16_GAMEPLAY1 = 0x0000;
     U16_GAMEPLAY2 = 0x0000;
@@ -353,51 +353,84 @@ void ExpWFCModeSel::OnModeButtonClick(PushButton& modeButton, u32 hudSlotId) {
     U16_GAMEPLAYA = 0x0000;
     U16_GAMEPLAYB = 0x0000;
     U16_GAMEPLAYC = 0x0000;
+    U16_GAMEPLAYC2 = 0x0000;
     U16_GAMEPLAYD = 0x0000;
     U16_GAMEPLAYE = 0x0000;
+    GameModeOnline = 0x00;
     if(prevId == ottButtonId) {
         U16_GAMEPLAYE = 0x0001;
+        System::sInstance->netMgr.region = 0x46;
+        GameModeOnline = 0x0E;
     }
-    if(prevId == countdownButtonId) {
+    else if(prevId == countdownButtonId) {
         U16_GAMEPLAYC = 0x0001;
+        U16_GAMEPLAYC2 = 0x0001;
+        GameModeOnline = 0x0C;
+        System::sInstance->netMgr.region = 0x47;
     }
-    if(prevId == bombblastButtonId) {
+    else if(prevId == bombblastButtonId) {
         U16_GAMEPLAY1 = 0x0001;
+        System::sInstance->netMgr.region = 0x48;
+        GameModeOnline = 0x01;
     }
-    if(prevId == accelerationButtonId) {
+    else if(prevId == accelerationButtonId) {
         U16_GAMEPLAY2 = 0x0001;
+        System::sInstance->netMgr.region = 0x49;
+        GameModeOnline = 0x02;
     }
-    if(prevId == bananaslipButtonId) {
+    else if(prevId == bananaslipButtonId) {
         U16_GAMEPLAY3 = 0x0001;
+        System::sInstance->netMgr.region = 0x4A;
+        GameModeOnline = 0x03;
     }
-    if(prevId == randomitemsButtonId) {
+    else if(prevId == randomitemsButtonId) {
         U16_GAMEPLAY4 = 0x0001;
+        System::sInstance->netMgr.region = 0x4B;
+        GameModeOnline = 0x04;
     }
-    if(prevId == unfairitemsButtonId) {
+    else if(prevId == unfairitemsButtonId) {
         U16_GAMEPLAY5 = 0x0001;
+        System::sInstance->netMgr.region = 0x4C;
+        GameModeOnline = 0x05;
     }
-    if(prevId == bsmadnessButtonId) {
+    else if(prevId == bsmadnessButtonId) {
         U16_GAMEPLAY6 = 0x0001;
+        System::sInstance->netMgr.region = 0x4D;
+        GameModeOnline = 0x06;
     }
-    if(prevId == mushroomdashButtonId) {
+    else if(prevId == mushroomdashButtonId) {
         U16_GAMEPLAY7 = 0x0001;
+        System::sInstance->netMgr.region = 0x4E;
+        GameModeOnline = 0x07;
     }
-    if(prevId == bumperkartsButtonId) {
+    else if(prevId == bumperkartsButtonId) {
         U16_GAMEPLAY8 = 0x0001;
+        System::sInstance->netMgr.region = 0x4F;
+        GameModeOnline = 0x08;
     }
-    if(prevId == itemrampageButtonId) {
+    else if(prevId == itemrampageButtonId) {
         U16_GAMEPLAY9 = 0x0001;
+        System::sInstance->netMgr.region = 0x50;
+        GameModeOnline = 0x09;
     }
-    if(prevId == itemrainButtonId) {
+    else if(prevId == itemrainButtonId) {
         U16_GAMEPLAYA = 0x0001;
+        System::sInstance->netMgr.region = 0x51;
+        GameModeOnline = 0x0A;
     }
-    if(prevId == shellbreakButtonId) {
+    else if(prevId == shellbreakButtonId) {
         U16_GAMEPLAYB = 0x0001;
+        System::sInstance->netMgr.region = 0x52;
+        GameModeOnline = 0x0B;
     }
-    if(prevId == booststackerButtonId) {
+    else if(prevId == booststackerButtonId) {
         U16_GAMEPLAYD = 0x0001;
+        System::sInstance->netMgr.region = 0x53;
+        GameModeOnline = 0x0D;
     }
-    System::sInstance->netMgr.ownStatusData = isOTT;
+    else {
+        System::sInstance->netMgr.region = 0x45;
+    }
     WFCModeSelect::OnModeButtonClick(modeButton, hudSlotId);
     modeButton.buttonId = prevId;
 }

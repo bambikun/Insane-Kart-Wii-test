@@ -297,7 +297,6 @@ static int GetMsgIdxById(const BMGHolder& normalHolder, s32 bmgId) {
     }
     else isCustom = CUSTOM_BMG;
     return ret;
-    //}
 }
 kmBranch(0x805f8c88, GetMsgIdxById);
 

@@ -5,6 +5,7 @@
 #include <Race/200ccParams.hpp>
 #include <PulsarSystem.hpp>
 #include <MKVN.hpp>
+#include <PulsarSystem.hpp>
 
 //Unoptimized code which is mostly a port of Stebler's version which itself comes from CTGP's, speed factor is in the LapSpeedModifier code
 
@@ -132,7 +133,7 @@ kmCall(0x8069804c, BrakeEffectKarts);
 
 
 static void FastFallingBody(Kart::Status& status, Kart::Physics& physics) { //weird thing 0x96 padding byte used
-    if(System::sInstance->IsContext(PULSAR_200)) {
+    if(System::sInstance->IsContext(PULSAR_200) || U16_GAMEPLAY2 == 0x0001) {
         if((status.airtime >= 2) && (!status.bool_0x96 || (status.airtime > 19))) {
             Input::ControllerHolder& controllerHolder = status.link->GetControllerHolder();
             float input = controllerHolder.inputStates[0].stick.z <= 0.0f ? 0.0f :
@@ -148,7 +149,7 @@ kmCall(0x805967a4, FastFallingBody);
 kmWrite32(0x8059739c, 0x38A10014); //addi r5, sp, 0x14 to align with the Vec3 on the stack
 static Kart::WheelPhysicsHolder& FastFallingWheels(Kart::Sub& sub, u8 wheelIdx, Vec3& gravityVector) { //weird thing 0x96 status
     float gravity = -1.3f;
-    if(System::sInstance->IsContext(PULSAR_200)) {
+    if(System::sInstance->IsContext(PULSAR_200) || U16_GAMEPLAY2 == 0x0001) {
         Kart::Status* status = sub.kartStatus;
         if(status->airtime == 0) status->bool_0x96 = ((status->bitfield0 & 0x80) != 0) ? true : false;
         else if((status->airtime >= 2) && (!status->bool_0x96 || (status->airtime > 19))) {
@@ -166,7 +167,9 @@ kmCall(0x805973a4, FastFallingWheels);
 void TurnInAir() {
     U16_TURNINAIR = 0x0000;
     if(System::sInstance->IsContext(PULSAR_200) || U16_GAMEPLAY2 == 0x0001) {
+        if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW9,SETTINGS_TURN_IN_AIR) == TURN_IN_AIR_ENABLED && TTS_CHECK != 0x00000001) {
         U16_TURNINAIR = 0x0001;
+        }
     }
 }
 static PageLoadHook AIRTURN200CC(TurnInAir);

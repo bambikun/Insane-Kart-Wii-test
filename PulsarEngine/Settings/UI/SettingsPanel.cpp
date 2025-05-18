@@ -5,6 +5,7 @@
 #include <Settings/UI/ExpWFCMainPage.hpp>
 #include <SlotExpansion/CupsConfig.hpp>
 #include <MKVN.hpp>
+#include <MarioKartWii/UI/Section/SectionMgr.hpp>
 
 namespace Pulsar {
 namespace UI {
@@ -169,8 +170,8 @@ void SettingsPanel::OnActivate() {
     this->externControls[0]->SelectInitial(0);
     this->bottomText->SetMessage(BMG_SETTINGS_BOTTOM); //no need for any offset here as this is the default "save" bottom msg
 
-    this->externControls[1]->SetMessage(BMG_SETTINGS_PAGE + this->GetNextBMGOffset(1));
-    this->externControls[2]->SetMessage(BMG_SETTINGS_PAGE + this->GetNextBMGOffset(-1));
+    this->externControls[1]->SetMessage(BMG_SETTINGS_PAGE);
+    this->externControls[2]->SetMessage(BMG_SETTINGS_PAGE + 1);
     for(int i = 0; i < Settings::Params::maxRadioCount; ++i) {
         RadioButtonControl& radio = this->radioButtonControls[i];
         bool isDisabled = false;
@@ -279,9 +280,11 @@ void SettingsPanel::SaveSettings(bool writeFile) {
 void SettingsPanel::OnBackPress(u32 hudSlotId) {
     PushButton& okButton = *this->externControls[0];
     okButton.SelectFocus();
+    const SectionId sectionPage = SectionMgr::sInstance->curSection->sectionId;
     if(this->prevPageId == PAGE_WFC_MAIN) {
         this->SaveSettings(true);
-        Pages::Menu::ChangeSectionById(SECTION_P1_WIFI, okButton);
+        if(sectionPage == SECTION_P1_WIFI) Pages::Menu::ChangeSectionById(SECTION_P1_WIFI, okButton);
+        if(sectionPage == SECTION_P2_WIFI) Pages::Menu::ChangeSectionById(SECTION_P2_WIFI, okButton);
     }
     if(this->prevPageId == PAGE_SINGLE_PLAYER_MENU) {
         this->SaveSettings(true);
@@ -295,9 +298,11 @@ void SettingsPanel::OnBackPress(u32 hudSlotId) {
 void SettingsPanel::OnSaveButtonClick(PushButton& button, u32 hudSlotId) {
     PushButton& okButton = *this->externControls[0];
     okButton.SelectFocus();
+    const SectionId sectionPage = SectionMgr::sInstance->curSection->sectionId;
     if(this->prevPageId == PAGE_WFC_MAIN) {
         this->SaveSettings(true);
-        Pages::Menu::ChangeSectionById(SECTION_P1_WIFI, okButton);
+        if(sectionPage == SECTION_P1_WIFI) Pages::Menu::ChangeSectionById(SECTION_P1_WIFI, okButton);
+        if(sectionPage == SECTION_P2_WIFI) Pages::Menu::ChangeSectionById(SECTION_P2_WIFI, okButton);
     }
     if(this->prevPageId == PAGE_SINGLE_PLAYER_MENU) {
         this->SaveSettings(true);

@@ -3,7 +3,6 @@
 #include <MKVN.hpp>
 #include <PulsarSystem.hpp>
 #include <SlotExpansion/UI/ExpCupSelect.hpp>
-#include <MarioKartWii/RKNet/RKNetController.hpp>
 #include <MarioKartWii/UI/Section/SectionMgr.hpp>
 
 namespace Pulsar{
@@ -20,7 +19,7 @@ void Remove_Background_Blur_Glow(){
         U32_RBBG_HOOK_PT2 = 0x30000000;
     }
 }
-static RaceLoadHook RBBG_Hook(Remove_Background_Blur_Glow);
+static SectionLoadHook RBBG_Hook(Remove_Background_Blur_Glow);
 
 void LakituRemove(){
     U16_LAKITU = 0x0000;
@@ -28,7 +27,7 @@ void LakituRemove(){
         U16_LAKITU = 0x0001;
     }
 }
-static PageLoadHook NOLAKITU(LakituRemove);
+static SectionLoadHook NOLAKITU(LakituRemove);
 
 void AccurateItems(){
     U32_ACCURATE_ITEMS = 0x0000;
@@ -37,7 +36,7 @@ void AccurateItems(){
         U32_ACCURATE_ITEMS = 0x0001;
     }
 }
-static RaceLoadHook ACCURATE_ITEMS_Hook(AccurateItems);
+static SectionLoadHook ACCURATE_ITEMS_Hook(AccurateItems);
 
 void AutoTrailItems(){
     U32_TRAIL1 = 0x0000;
@@ -46,7 +45,7 @@ void AutoTrailItems(){
             U32_TRAIL1 = 0x0001;
     }
 }
-static RaceLoadHook ITEM_TRAIL(AutoTrailItems);
+static SectionLoadHook ITEM_TRAIL(AutoTrailItems);
 
 
 // 30FPS
@@ -61,7 +60,7 @@ void Framerate(){
         U8_30FPS = 0x01;
     }
 }
-static PageLoadHook FRAMERATE(Framerate);
+static SectionLoadHook FRAMERATE(Framerate);
 
 void ColoredMiiTags(){
     U32_COLORS = 0x0000;
@@ -70,62 +69,73 @@ void ColoredMiiTags(){
         U32_COLORS = 0x0001;
     }
 }
-static RaceLoadHook MIICOLORS(ColoredMiiTags);
+static SectionLoadHook MIICOLORS(ColoredMiiTags);
 
 void MenuScrolling(){
     if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_CUP_SCROLLING) == CUPS_2) {
         U8_MENU = 0x01;
     }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_CUP_SCROLLING) == CUPS_4) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_CUP_SCROLLING) == CUPS_4) {
         U8_MENU = 0x02;
     }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_CUP_SCROLLING) == CUPS_6) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_CUP_SCROLLING) == CUPS_6) {
         U8_MENU = 0x03;
     }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_CUP_SCROLLING) == CUPS_8) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_CUP_SCROLLING) == CUPS_8) {
         U8_MENU = 0x04;
     }
 }
-static PageLoadHook SCROLLING(MenuScrolling);
+static SectionLoadHook SCROLLING(MenuScrolling);
 
 void RaceThemeSwitch(){
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_RACE_THEME) == RACE_DEFAULT) {
-        U16_MENUS = 0x0000;
+    U8_RACE_MENUS1 = 0x65;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_RACE_THEME) == RACE_MK8) {
+        U8_RACE_MENUS1 = 0x61;
     }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_RACE_THEME) == RACE_MK8) {
-        U16_MENUS = 0x0001;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_RACE_THEME) == RACE_SMK) {
+        U8_RACE_MENUS1 = 0x62;
     }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_RACE_THEME) == RACE_SMK) {
-        U16_MENUS = 0x0002;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_RACE_THEME) == RACE_MKDD) {
+        U8_RACE_MENUS1 = 0x63;
     }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_RACE_THEME) == RACE_MKDD) {
-        U16_MENUS = 0x0003;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_RACE_THEME) == RACE_SMO) {
+        U8_RACE_MENUS1 = 0x64;
     }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_RACE_THEME) == RACE_SMO) {
-        U16_MENUS = 0x0004;
-    }
+    U8_RACE_MENUS2 = U8_RACE_MENUS1;
+    U8_RACE_MENUS3 = U8_RACE_MENUS1;
 }
-static PageLoadHook THEMINGRACE(RaceThemeSwitch);
+static SectionLoadHook THEMINGRACE(RaceThemeSwitch);
 
 void MenuThemeSwitch(){
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_MENU_THEME) == MENU_DEFAULT) {
-        U16_MENUSUI = 0x0000;
+    U8_MENUSINGLE1 = 0x65;
+    U8_MENUMULTI1 = 0x69;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_MENU_THEME) == MENU_MK8) {
+        U8_MENUSINGLE1 = 0x61;
+        U8_MENUMULTI1 = 0x61;
     }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_MENU_THEME) == MENU_MK8) {
-        U16_MENUSUI = 0x0001;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_MENU_THEME) == MENU_SMK) {
+        U8_MENUSINGLE1 = 0x62;
+        U8_MENUMULTI1 = 0x62;
     }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_MENU_THEME) == MENU_SMK) {
-        U16_MENUSUI = 0x0002;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_MENU_THEME) == MENU_MKDD) {
+        U8_MENUSINGLE1 = 0x63;
+        U8_MENUMULTI1 = 0x63;
     }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_MENU_THEME) == MENU_MKDD) {
-        U16_MENUSUI = 0x0003;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_MENU_THEME) == MENU_SMO) {
+        U8_MENUSINGLE1 = 0x64;
+        U8_MENUMULTI1 = 0x64;
     }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_MENU_THEME) == MENU_SMO) {
-        U16_MENUSUI = 0x0004;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_MENU_THEME) == MENU_DX) {
+        U8_MENUSINGLE1 = 0x66;
+        U8_MENUMULTI1 = 0x66;
     }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW2,SETTINGS_MENU_THEME) == MENU_DX) {
-        U16_MENUSUI = 0x0005;
-    }
+    U8_MENUSINGLE2 = U8_MENUSINGLE1;
+    U8_MENUMULTI2 = U8_MENUMULTI1;
+    U8_MENUSINGLE3 = U8_MENUSINGLE1;
+    U8_MENUMULTI3 = U8_MENUMULTI1;
+    U8_MENUSINGLE4 = U8_MENUSINGLE1;
+    U8_MENUMULTI4 = U8_MENUMULTI1;
+    U8_MENUSINGLE5 = U8_MENUSINGLE1;
 }
 static PageLoadHook THEMINGUI(MenuThemeSwitch);
 
@@ -143,7 +153,7 @@ void BRSTMS() {
         U8_BRSTMS = 0x01;
     }
 }
-static PageLoadHook BRSTMTOGGLE(BRSTMS);
+static SectionLoadHook BRSTMTOGGLE(BRSTMS);
 
 void SilentController() {
     U16_CONTROLLER = 0x0000;
@@ -151,7 +161,7 @@ void SilentController() {
         U16_CONTROLLER = 0x0001;
     }
 }
-static PageLoadHook CONTROLLERCHANGE(SilentController);
+static SectionLoadHook CONTROLLERCHANGE(SilentController);
 
 void ItemsOnMinimap() {
     U16_MINIMAPITEMS = 0x0000;
@@ -159,7 +169,7 @@ void ItemsOnMinimap() {
         U16_MINIMAPITEMS = 0x0001;
     }
 }
-static PageLoadHook MINIITEMS(ItemsOnMinimap);
+static SectionLoadHook MINIITEMS(ItemsOnMinimap);
 
 void StarAnimation() {
     U16_STAR= 0x0000;
@@ -167,16 +177,15 @@ void StarAnimation() {
         U16_STAR = 0x0001;
     }
 }
-static RaceLoadHook STAR(StarAnimation);
+static SectionLoadHook STAR(StarAnimation);
 
 void Rubberbanding() {
-    U32_RUBBERBANDING = 0x38600000;
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_CPU_RUBBERBANDING) == RUBBERBANDING_ENABLED) {
-        if(REGION !=0x45) U32_RUBBERBANDING = 0x4801495D;
-        if(REGION ==0x45) U32_RUBBERBANDING = 0x4801499D;
+    U32_RUBBERBANDING = 0x0001;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_CPU_RUBBERBANDING) == RUBBERBANDING_ENABLED || U16_MISSION_MODE_FIX == 0x0001) {
+        U32_RUBBERBANDING = 0x0000;
     }
 }
-static RaceLoadHook RUBBERBANDING(Rubberbanding);
+static PageLoadHook RUBBERBANDING(Rubberbanding);
 
 void NoCharacterVoices() {
     U16_NOVOICE = 0x0000;
@@ -184,7 +193,7 @@ void NoCharacterVoices() {
         U16_NOVOICE = 0x0001;
     }
 }
-static PageLoadHook NoSounds(NoCharacterVoices);
+static SectionLoadHook NoSounds(NoCharacterVoices);
 
 void TripleBananas() {
     U16_BANANAS = 0x0000;
@@ -192,7 +201,7 @@ void TripleBananas() {
         U16_BANANAS = 0x0001;
     }
 }
-static RaceLoadHook TRIPLEBANANAS(TripleBananas);
+static SectionLoadHook TRIPLEBANANAS(TripleBananas);
 
 void IdleDC() {
     U16_DCS = 0x0000;
@@ -200,7 +209,7 @@ void IdleDC() {
         U16_DCS = 0x0001;
     }
 }
-static PageLoadHook NODCS(IdleDC);
+static SectionLoadHook NODCS(IdleDC);
 
 void PositionTracker() {
     U16_POSITION = 0x0001;
@@ -208,7 +217,7 @@ void PositionTracker() {
         U16_POSITION = 0x0000;
     }
 }
-static PageLoadHook POS(PositionTracker);
+static SectionLoadHook POS(PositionTracker);
 
 void ColoredMinimaps() {
     U16_MINIMAPS = 0x0000;
@@ -216,7 +225,7 @@ void ColoredMinimaps() {
         U16_MINIMAPS = 0x0001;
     }
 }
-static PageLoadHook COLOREDUWU(ColoredMinimaps);
+static SectionLoadHook COLOREDUWU(ColoredMinimaps);
 
 void FinishTimes() {
     U16_FINISH_TIMES = 0x0000;
@@ -224,7 +233,7 @@ void FinishTimes() {
         U16_FINISH_TIMES = 0x0001;
     }
 }
-static RaceLoadHook FINISHTIMES(FinishTimes);
+static SectionLoadHook FINISHTIMES(FinishTimes);
 
 void MegaFOVToggle() {
     U16_FOV = 0x0000;
@@ -232,18 +241,13 @@ void MegaFOVToggle() {
         U16_FOV = 0x0001;
     }
 }
-static RaceLoadHook MegaCamera(MegaFOVToggle);
+static SectionLoadHook MegaCamera(MegaFOVToggle);
 
 void CPUDifficultyToggle() {
-    U16_CPUS = 0x0000;
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_CPU_DIFFICULTY) == DIFFICULTY_HARD) {
-        U16_CPUS = 0x0001;
-    }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_CPU_DIFFICULTY) == DIFFICULTY_EXTREME) {
-        U16_CPUS = 0x0002;
-    }
+    if(U16_MISSION_MODE_FIX != 0x0001) U16_CPUS = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_CPU_DIFFICULTY);
+    else U16_CPUS = 0x0000;
 }
-static RaceLoadHook CPUToggle(CPUDifficultyToggle);
+static PageLoadHook CPUToggle(CPUDifficultyToggle);
 
 void NoLuma() {
     U16_LUMA = 0x0000;
@@ -251,33 +255,11 @@ void NoLuma() {
         U16_LUMA = 0x0001;
     }
 }
-static RaceLoadHook LumaToggle(NoLuma);
+static SectionLoadHook LumaToggle(NoLuma);
 
 void FontToggle() {
-    U16_FONT = 0x0000;
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FONT) == FONT_NSMBU) {
-        U16_FONT = 0x0001;
-    }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FONT) == FONT_SUPER_MARIO_MAKER) {
-        U16_FONT = 0x0002;
-    }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FONT) == FONT_CRASH_BANDICOOT) {
-        U16_FONT = 0x0003;
-    }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FONT) == FONT_JUST_DANCE) {
-        U16_FONT = 0x0004;
-    }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FONT) == FONT_MK8) {
-        U16_FONT = 0x0005;
-    }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FONT) == FONT_SPLATOON) {
-        U16_FONT = 0x0006;
-    }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FONT) == FONT_MARIO) {
-        U16_FONT = 0x0007;
-    }
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FONT) == FONT_SPLATOON1) {
-        U16_FONT = 0x0008;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FONT) > 0) {
+        U8_FONT = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FONT) + 0x60;
     }
 }
 BootHook FONTTOGGLE(FontToggle, 1);
@@ -288,7 +270,7 @@ void EffectsOnMinimap() {
         U16_EFFECTS = 0x0001;
     }
 }
-static RaceLoadHook KARTEFFECT(EffectsOnMinimap);
+static SectionLoadHook KARTEFFECT(EffectsOnMinimap);
 
 void MenuSoundToggle() {
     U16_MENU_SOUNDS = 0x0000;
@@ -304,7 +286,7 @@ void FirstPerson() {
         U16_WINGS = 0x0001;
     }
 }
-static PageLoadHook FIRSTCAM(FirstPerson);
+static SectionLoadHook FIRSTCAM(FirstPerson);
 
 void BrakeDriftingToggle() {
     U8_BRAKEDRIFTING = 0x00;
@@ -352,7 +334,7 @@ void AutoAcceleration() {
         U16_AUTOACCEL = 0x0001;
     }
 }
-static PageLoadHook AUTOSTART(AutoAcceleration);
+static SectionLoadHook AUTOSTART(AutoAcceleration);
 
 void LightningFlashToggle() {
     U16_LIGHTNINGFLASH = 0x0000;
@@ -360,7 +342,7 @@ void LightningFlashToggle() {
         U16_LIGHTNINGFLASH = 0x0001;
     }
 }
-static PageLoadHook LIGHTNINGFLASH(LightningFlashToggle);
+static SectionLoadHook LIGHTNINGFLASH(LightningFlashToggle);
 
 void QuitConfirmToggle() {
     U16_QUITCONFIRM = 0x0000;
@@ -382,7 +364,7 @@ void MillisecondsMod() {
         U16_MILLISECONDS = 0x0003;
     }
 }
-static PageLoadHook MILLISECONDSMODS(MillisecondsMod);
+static SectionLoadHook MILLISECONDSMODS(MillisecondsMod);
 
 void ItemBoxesOnMinimap() {
     U16_ITEMBOXES = 0x0000;
@@ -390,7 +372,7 @@ void ItemBoxesOnMinimap() {
         U16_ITEMBOXES = 0x0001;
     }
 }
-static PageLoadHook MEMEMAP(ItemBoxesOnMinimap);
+static SectionLoadHook MEMEMAP(ItemBoxesOnMinimap);
 
 void TransmissionToggle() {
     U16_TRANSMISSION = 0x0000;
@@ -401,7 +383,7 @@ void TransmissionToggle() {
         U16_TRANSMISSION = 0x0002;
     }
 }
-static PageLoadHook TRANSMISSION(TransmissionToggle);
+static SectionLoadHook TRANSMISSION(TransmissionToggle);
 
 void BulletModel() {
     U16_BULLETBILLTOGGLE = 0x0000;
@@ -409,7 +391,7 @@ void BulletModel() {
         U16_BULLETBILLTOGGLE = 0x0001;
     }
 }
-static PageLoadHook BULLETBILLTOGGLE(BulletModel);
+static SectionLoadHook BULLETBILLTOGGLE(BulletModel);
 
 void MiisLookAtCamera() {
     U16_MIISCAMERA = 0x0000;
@@ -417,24 +399,7 @@ void MiisLookAtCamera() {
         U16_MIISCAMERA = 0x0001;
     }
 }
-static PageLoadHook MIISTARE(MiisLookAtCamera);
-
-void FCHider() {
-    U16_FCONLINE = 0x0000;
-    U16_FCOFFLINE = 0x0000;
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW6,SETTINGS_HIDE_FRIEND_CODE) == HIDE_FC_TITLE) {
-        U16_FCOFFLINE = 0x0001;
-    }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW6,SETTINGS_HIDE_FRIEND_CODE) == HIDE_FC_ONLINE) {
-        U16_FCONLINE = 0x0001;
-    }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW6,SETTINGS_HIDE_FRIEND_CODE) == HIDE_FC_EVERYWHERE) {
-        U16_FCONLINE = 0x0001;
-        U16_FCOFFLINE = 0x0001;
-    }
-}
-static PageLoadHook FCMOD(FCHider);
-BootHook HIDETHATFC(FCHider, 7);
+static SectionLoadHook MIISTARE(MiisLookAtCamera);
 
 void OtherMega() {
     U16_OTHERMEGA = 0x0000;
@@ -442,7 +407,7 @@ void OtherMega() {
         U16_OTHERMEGA = 0x0001;
     }
 }
-static PageLoadHook OTHERMEGA(OtherMega);
+static SectionLoadHook OTHERMEGA(OtherMega);
 
 void OtherStar() {
     U16_OTHERSTAR = 0x0000;
@@ -450,7 +415,7 @@ void OtherStar() {
         U16_OTHERSTAR = 0x0001;
     }
 }
-static PageLoadHook OTHERSTAR(OtherStar);
+static SectionLoadHook OTHERSTAR(OtherStar);
 
 void MultiChannelToggle() {
     U16_MULTICHANNEL = 0x0000;
@@ -458,7 +423,7 @@ void MultiChannelToggle() {
         U16_MULTICHANNEL = 0x0001;
     }
 }
-static PageLoadHook MULTIMUSIC(MultiChannelToggle);
+static SectionLoadHook MULTIMUSIC(MultiChannelToggle);
 
 void EngineToggle() {
     U16_ENGINE = 0x0000;
@@ -466,7 +431,7 @@ void EngineToggle() {
         U16_ENGINE = 0x0001;
     }
 }
-static PageLoadHook ENGINESOUNDS(EngineToggle);
+static SectionLoadHook ENGINESOUNDS(EngineToggle);
 
 void BRSTMVolume() {
     U16_VOLUME = 0x0000;
@@ -486,7 +451,7 @@ void BRSTMVolume() {
         U16_VOLUME = 0x0001;
     }
 }
-static PageLoadHook VOLUME(BRSTMVolume);
+static SectionLoadHook VOLUME(BRSTMVolume);
 
 void OwnMegaMusic() {
     U16_MEGA = 0x0000;
@@ -494,7 +459,7 @@ void OwnMegaMusic() {
         U16_MEGA = 0x0001;
     }
 }
-static PageLoadHook MEGAMUSIC(OwnMegaMusic);
+static SectionLoadHook MEGAMUSIC(OwnMegaMusic);
 
 void OwnStarMusic() {
     U16_STARMUSIC = 0x0000;
@@ -502,7 +467,7 @@ void OwnStarMusic() {
         U16_STARMUSIC = 0x0001;
     }
 }
-static PageLoadHook STARMUSIC(OwnStarMusic);
+static SectionLoadHook STARMUSIC(OwnStarMusic);
 
 void ShockEffect() {
     U16_SQUISH = 0x0000;
@@ -510,7 +475,7 @@ void ShockEffect() {
         U16_SQUISH = 0x0001;
     }
 }
-static PageLoadHook SQUISH(ShockEffect);
+static SectionLoadHook SQUISH(ShockEffect);
 
 void ThwompDamage() {
     U16_THWOMP = 0x0000;
@@ -518,7 +483,7 @@ void ThwompDamage() {
         U16_THWOMP = 0x0001;
     }
 }
-static PageLoadHook DAMAGE(ThwompDamage);
+static SectionLoadHook DAMAGE(ThwompDamage);
 
 void ChompLaunch() {
     U16_CHOMP = 0x0000;
@@ -526,11 +491,13 @@ void ChompLaunch() {
         U16_CHOMP = 0x0001;
     }
 }
-static PageLoadHook CHOMPLAUNCH(ChompLaunch);
+static SectionLoadHook CHOMPLAUNCH(ChompLaunch);
 
 void GameModeToggle() {
     const SectionId sectionMode = SectionMgr::sInstance->curSection->sectionId;
-    if (U8_WWS_CHECK != 0x01) {
+    if(sectionMode == SECTION_CREATE_NEW_SAVE && WiiInput == 0x8000 || sectionMode == SECTION_CREATE_NEW_SAVE && GCInput == 0x1080 || sectionMode == SECTION_CREATE_NEW_SAVE && ClassicInput == 0x800) Debug::LaunchSoftware();
+    if(sectionMode == SECTION_CORRUPT_SAVE && WiiInput == 0x8000 || sectionMode == SECTION_CORRUPT_SAVE && GCInput == 0x1080 || sectionMode == SECTION_CORRUPT_SAVE && ClassicInput == 0x800) Debug::LaunchSoftware();
+    if(U8_WWS_CHECK != 0x01 && OfflineFlag_GameMode != 0x01) {
     U16_GAMEPLAY1 = 0x0000;
     U16_GAMEPLAY2 = 0x0000;
     U16_GAMEPLAY3 = 0x0000;
@@ -543,51 +510,58 @@ void GameModeToggle() {
     U16_GAMEPLAYA = 0x0000;
     U16_GAMEPLAYB = 0x0000;
     U16_GAMEPLAYC = 0x0000;
+    U16_GAMEPLAYC2 = 0x0000;
     U16_GAMEPLAYD = 0x0000;
     U16_GAMEPLAYE = 0x0000;
+    U16_FREE_ROAM = 0x0000;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_BOB_OMB_BLAST && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_BOB_OMB_BLAST && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAY1 = 0x0001;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_INFINITE_ACCELERATION && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_INFINITE_ACCELERATION && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAY2 = 0x0001;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_BANANA_SLIP && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_BANANA_SLIP && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAY3 = 0x0001;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_RANDOM_ITEMS && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_RANDOM_ITEMS && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAY4 = 0x0001;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_UNFAIR_ITEMS && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_UNFAIR_ITEMS && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAY5 = 0x0001;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_BLUE_SHELL_MADNESS && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_BLUE_SHELL_MADNESS && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAY6 = 0x0001;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_MUSHROOM_DASH && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_MUSHROOM_DASH && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAY7 = 0x0001;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_BUMPER_KARTS && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_BUMPER_KARTS && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAY8 = 0x0001;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_RANDOM_EFFECTS && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_RANDOM_EFFECTS && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAY9 = 0x0001;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_ITEM_RAIN && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_ITEM_RAIN && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAYA = 0x0001;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_SHELL_BREAK && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_SHELL_BREAK && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAYB = 0x0001;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_COUNTDOWN && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_CRAZY_ITEMS && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAYC = 0x0001;
+        U16_GAMEPLAYC2 = 0x0001;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_RIIBALANCED && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_RIIBALANCED && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAYD = 0x0001;
     }
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_ULTRAS_ENABLED && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE) == GAME_MODE_ULTRAS_ENABLED && TTS_CHECK != 0x00000001 && U8_WWS_CHECK != 0x01 && sectionMode != SECTION_MISSION_MODE && OfflineFlag_GameMode != 0x01) {
         U16_GAMEPLAYE = 0x0001;
     }
+    if(U8_WWS_CHECK != 0x01) GameModeOnline = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW1,SETTINGS_GAME_MODE);
+    if(sectionMode == SECTION_SINGLE_P_FROM_MENU) OfflineFlag_GameMode = 0x01;
+    if(sectionMode == SECTION_MAIN_MENU_FROM_MENU) OfflineFlag_GameMode = 0x00;
+    if(sectionMode == SECTION_MAIN_MENU_FROM_MENU) U16_MISSION_MODE_FIX = 0x0000;
 }
 static PageLoadHook GAMEMODE(GameModeToggle);
 
@@ -597,7 +571,7 @@ void InputViewer() {
         U8_INPUT_VIEW = 0x01;
     }
 }
-static PageLoadHook INPUTDISPLAY(InputViewer);
+static SectionLoadHook INPUTDISPLAY(InputViewer);
 
 void FasterMenuNavigation() {
     U16_FAST_MENUS = 0x0000;
@@ -605,7 +579,7 @@ void FasterMenuNavigation() {
         U16_FAST_MENUS = 0x0001;
     }
 }
-static PageLoadHook FASTMENUS(FasterMenuNavigation);
+static SectionLoadHook FASTMENUS(FasterMenuNavigation);
 
 void KMPInfoDisplay() {
     U8_DEBUG = 0x00;
@@ -616,7 +590,7 @@ void KMPInfoDisplay() {
         U8_DEBUG = 0x02;
     }
 }
-static PageLoadHook KMPINFO(KMPInfoDisplay);
+static SectionLoadHook KMPINFO(KMPInfoDisplay);
 
 void RecolorsMenus() {
     U8_RED1 = 0xFF;
@@ -706,7 +680,15 @@ void WaitingMusic() {
         U16_WAITING = 0x0001;
     }
 }
-static PageLoadHook WAITINGMUSIC(WaitingMusic);
+static SectionLoadHook WAITINGMUSIC(WaitingMusic);
+
+void TrackManiaCam() {
+    U16_TRACK_MANIA = 0x0000;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW9,SETTINGS_TRACK_MANIA) == CAM_ENABLED) {
+        U16_TRACK_MANIA = 0x0001;
+    }
+}
+static SectionLoadHook TRACKMANIA(TrackManiaCam);
 
 
 }

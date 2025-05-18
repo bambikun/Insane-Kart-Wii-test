@@ -185,7 +185,7 @@ void System::UpdateContext() {
         this->lecodeMgr = nullptr;
     }
     */
-
+    const u32 region = this->netMgr.region;
     if(isKO) {
         if(sceneId == SCENE_ID_MENU && SectionMgr::sInstance->sectionParams->onlineParams.currentRaceNumber == -1) this->koMgr = new (this->heap) KO::Mgr; //create komgr when loading the select phase of the 1st race of a froom
     }
@@ -231,6 +231,15 @@ kmWrite32(0x80549974, 0x38600001);
 
 //Skip ESRB page
 kmRegionWrite32(0x80604094, 0x4800001c, 'E');
+
+//NTSC-K Files
+kmRegionWrite32(0x8087E1F9, 0x2E737A73, 'K');
+kmRegionWrite16(0x8087E1FD, 0x00000000, 'K');
+kmRegionWrite16(0x8087E8B6, 0x00000000, 'K');
+kmRegionWrite32(0x8088247D, 0x6B616E6A, 'K');
+kmRegionWrite32(0x80882481, 0x695F666F, 'K');
+kmRegionWrite16(0x80882485, 0x00006E74, 'K');
+kmRegionWrite8(0x8087E8B5, 0x0000007A, 'K');
 
 const char System::pulsarString[] = "/Pulsar";
 const char System::CommonAssets[] = "/CommonAssets.szs";

@@ -7,6 +7,8 @@
 #include <Race/200ccParams.hpp>
 #include <PulsarSystem.hpp>
 #include <MKVN.hpp>
+#include <Settings/SettingsParam.hpp>
+#include <MarioKartWii/UI/Section/SectionMgr.hpp>
 
 namespace Pulsar {
 namespace Race {
@@ -16,13 +18,24 @@ RaceinfoPlayer* LoadCustomLapCount(RaceinfoPlayer* player, u8 id) {
     if (lapCount == 0) {
         lapCount = 3;
     }
-    if (U16_GAMEPLAYC == 0x0001) {
-        lapCount = 8;
+    if (U8_OFFLINE_FLAG != 0x00) {
+        lapCount = U8_OFFLINE_FLAG;
     }
     Racedata::sInstance->racesScenario.settings.lapCount = lapCount;
     return new(player) RaceinfoPlayer(id, lapCount);
 }
 kmCall(0x805328d4, LoadCustomLapCount);
+
+void OfflineFlag() {
+    const SectionId section = SectionMgr::sInstance->curSection->sectionId;
+    if(section == SECTION_SINGLE_P_FROM_MENU || section == SECTION_SINGLE_P_TT_CHANGE_CHARA || section == SECTION_SINGLE_P_TT_CHANGE_COURSE || section == SECTION_SINGLE_P_VS_NEXT_RACE || section == SECTION_LOCAL_MULTIPLAYER) {
+        U8_OFFLINE_FLAG = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW6,SETTINGS_LAP_COUNT);
+    }
+    if(section == SECTION_MAIN_MENU_FROM_BOOT || section == SECTION_MAIN_MENU_FROM_RESET || section == SECTION_MAIN_MENU_FROM_MENU || section == SECTION_MAIN_MENU_FROM_NEW_LICENSE || section == SECTION_MAIN_MENU_FROM_LICENSE || TTS_CHECK == 0x00000001) {
+        U8_OFFLINE_FLAG = 0x00;
+    }
+}
+static SectionLoadHook OFFLINE(OfflineFlag);
 
 //kmWrite32(0x80723d64, 0x7FA4EB78);
 void DisplayCorrectLap(AnmTexPatHolder* texPat) { //This Anm is held by a ModelDirector in a Lakitu::Player
