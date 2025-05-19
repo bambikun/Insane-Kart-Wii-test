@@ -46,14 +46,14 @@ kmWrite32(0x800077C8, 0x4E800020);
 //Disable BackModel by loading a different one (Toadette Hack Fan)
 kmWrite8(0x80890511, 0x4B);
 
-//Fix Buttons in Single Player
+//Fix Buttons in Single Player (Toadette Hack Fan)
 kmWrite8(0x808AE223, 0x54);
-
-//No Character Models
-kmWrite8(0x808904F6, 0x73);
 
 //No UNABLE TO CREATE A GHOST Text
 kmWrite32(0x80857AA0, 0x60000000);
+
+//Change Mission Button (Toadette Hack Fan)
+kmWrite8(0x808BE7C4, 0x51);
 
 }//namespace UI
 }//namespace Pulsar

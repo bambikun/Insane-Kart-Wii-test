@@ -203,6 +203,7 @@ enum IKW8 {
     SETTINGDEBUG_SCROLL_KMP = 2,
     SETTINGS_TRACK_MANIA = 3,
     SETTINGS_TURN_IN_AIR = 4,
+    SETTINGS_COMPATIBILITY_MODE = 5,
 
     SETTINGS_ALPHA = 0 + 6,
     SETTINGS_BLUE = 1 + 6,
@@ -835,6 +836,11 @@ enum TrackManiaCam {
 enum TurnInAir {
     TURN_IN_AIR_ENABLED = 0x0,
     TURN_IN_AIR_DISABLED = 0x1
+};
+
+enum CompatibilityMode {
+    COMPATIBILITY_MODE_DISABLED = 0x0,
+    COMPATIBILITY_MODE_ENABLED = 0x1
 };
 
 enum AlphaColor {

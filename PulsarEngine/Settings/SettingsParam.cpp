@@ -9,7 +9,7 @@ namespace Settings {
 
 u8 Params::radioCount[Params::pageCount] ={
     3, 5, 3, 5, 2, //menu, race, host, OTT, KO
-    6, 6, 6, 6, 6, 6, 6, 5//Add user radio count here
+    6, 6, 6, 6, 6, 6, 6, 6//Add user radio count here
 
 };
 u8 Params::scrollerCount[Params::pageCount] ={ 1, 1, 1, 0, 2, 5, 5, 5, 5, 5, 5, 5, 5 }; //menu, race, host, OTT, KO
@@ -28,7 +28,7 @@ u8 Params::buttonsPerPagePerRow[Params::pageCount][Params::maxRadioCount] = //fi
     { 2, 2, 2, 2, 2, 2 }, //Page5
     { 3, 3, 3, 3, 3, 3 }, //Page6
     { 3, 3, 3, 3, 3, 3 }, //Page7
-    { 3, 3, 3, 2, 2, 0 }, //Page8
+    { 3, 3, 3, 2, 2, 2 }, //Page8
 
 
  

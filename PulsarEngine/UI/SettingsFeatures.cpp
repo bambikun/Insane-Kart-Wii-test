@@ -690,6 +690,11 @@ void TrackManiaCam() {
 }
 static SectionLoadHook TRACKMANIA(TrackManiaCam);
 
+void CompatibilityMode() {
+    U8_COMPATIBILITY = 0x72;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW9,SETTINGS_COMPATIBILITY_MODE) == 1) U8_COMPATIBILITY = 0x73;
+}
+static PageLoadHook COMPATIBILITY(CompatibilityMode);
 
 }
 }
