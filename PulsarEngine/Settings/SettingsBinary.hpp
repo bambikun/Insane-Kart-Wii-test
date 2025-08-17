@@ -23,10 +23,10 @@ struct TrackTrophy {
 struct Page {
     union {
         struct {
-            u8 radioSetting[6];
-            u8 scrollSetting[6];
+            u8 radioSetting[8];
+            u8 scrollSetting[8];
         };
-        u8 settings[12];
+        u8 settings[16];
     };
 };
 

@@ -32,6 +32,23 @@ enum Context {
     PULSAR_MIIHEADS,
     PULSAR_MODE_OTT,
     PULSAR_MODE_KO,
+    PULSAR_POINT_DISTRO,
+    PULSAR_MODE_BOMB_BLAST,
+    PULSAR_MODE_INFINITE_ACCELERATION,
+    PULSAR_MODE_BANANA_SLIP,
+    PULSAR_MODE_RANDOM_ITEMS,
+    PULSAR_MODE_UNFAIR_ITEMS,
+    PULSAR_MODE_BLUE_SHELL_MADNESS,
+    PULSAR_MODE_MUSHROOM_DASH,
+    PULSAR_MODE_BUMPER_KARTS,
+    PULSAR_MODE_RANDOM_EFFECTS,
+    PULSAR_MODE_ITEM_RAIN,
+    PULSAR_MODE_SHELL_BREAK,
+    PULSAR_MODE_CRAZY_ITEMS,
+    PULSAR_MODE_RIIBALANCED,
+    PULSAR_MODE_ULTRAS_ENABLED,
+    PULSAR_FRIENDLY_FIRE,
+    PULSAR_KOFINAL,
     PULSAR_CONTEXT_COUNT,
 };
 
@@ -52,8 +69,11 @@ protected:
     //Virtual
     virtual void AfterInit() {};
 public:
+    u8 GetTransmission;
+    u8 transmissions[12];
+    u8 lastSelectedTransmission;
+    u32 lastSelectedTransmissionId;
     static System* sInstance;
-
     virtual void SetUserInfo(Network::ResvInfo::UserInfo& userInfo) {};
     virtual bool CheckUserInfo(const Network::ResvInfo::UserInfo& userInfo) { return true; };
     //Deprecated because you can now freely expand ROOM packets and do what you need to with them
@@ -108,6 +128,7 @@ public:
     //Modes
     KO::Mgr* koMgr;
     u32 ottVoteState;
+    u8 currentLap;
     bool ottHideNames;
     u8 nonTTGhostPlayersCount; //because a ghost can be added in vs, racedata's playercount is not reliable
 

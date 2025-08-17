@@ -5,7 +5,7 @@
 namespace Pulsar {
 namespace UI {
 u32 CtrlRaceSpeedo::Count() {
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE, SETTINGRACE_RADIO_SOM) == RACESETTING_SOM_DISABLED) return 0;
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE4, SETTINGS_SPEEDOMETER) == RACESETTING_SOM_DISABLED) return 0;
     const RacedataScenario& scenario = Racedata::sInstance->racesScenario;
     u32 localPlayerCount = scenario.localPlayerCount;
     const SectionId sectionId = SectionMgr::sInstance->curSection->sectionId;
@@ -20,7 +20,7 @@ void CtrlRaceSpeedo::Create(Page& page, u32 index, u32 count) {
         page.AddControl(index + i, *som, 0);
         char variant[0x20];
         int pos = i;
-        if(count == 1 && Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE, SETTINGRACE_RADIO_SOM) == RACESETTING_SOM_RIGHT) pos = 1;
+        if(count == 1 && Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE4, SETTINGS_SPEEDOMETER) == RACESETTING_SOM_RIGHT) pos = 1;
         snprintf(variant, 0x20, "Speedo_%1d_%1d", speedoType, pos);
         som->Load(variant, i);
     }
@@ -62,7 +62,7 @@ void CtrlRaceSpeedo::Init() {
 
 void CtrlRaceSpeedo::OnUpdate() {
     this->UpdatePausePosition();
-    const u8 digits = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE, SETTINGRACE_SCROLL_SOM);
+    const u8 digits = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE4, SETTINGS_SPEEDOMETER_FRACTIONAL);
     const Kart::Pointers& pointers = Kart::Manager::sInstance->players[this->GetPlayerId()]->pointers;
     const Kart::Physics* physics = pointers.kartBody->kartPhysicsHolder->physics;
 
@@ -73,8 +73,10 @@ void CtrlRaceSpeedo::OnUpdate() {
     float speedCap = pointers.kartMovement->hardSpeedLimit;
     if(speed > speedCap) speed = speedCap;
 
-
-    const u32 speedValue = static_cast<u32>(speed * 1000.0f);
+    if (speed > 999.999f) {
+        speed = 999.999f; //cap at 999.999 km/h
+    }
+    u32 speedValue = static_cast<u32>(speed * 1000.0f);
 
     //10 means empty, 11 dot
     u32 hundreds = speedValue % 1000000 / 100000;

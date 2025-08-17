@@ -190,8 +190,34 @@ void ExpWFCModeSel::OnActivatePatch() {
     register Pages::GlobeSearch* search;
     asm(mr search, r30;);
     const bool isHidden = search->searchType == 1 ? false : true; //make the button visible if continental was clicked
-    page->ottButton.isHidden = isHidden;
-    page->ottButton.manipulator.inaccessible = isHidden;
+/*page->ottButton.isHidden = isHidden;
+page->ottButton.manipulator.inaccessible = isHidden;
+page->countdownButton.isHidden = isHidden;
+page->countdownButton.manipulator.inaccessible = isHidden;
+page->bombblastButton.isHidden = isHidden;
+page->bombblastButton.manipulator.inaccessible = isHidden;
+page->accelerationButton.isHidden = isHidden;
+page->accelerationButton.manipulator.inaccessible = isHidden;
+page->bananaslipButton.isHidden = isHidden;
+page->bananaslipButton.manipulator.inaccessible = isHidden;
+page->randomitemsButton.isHidden = isHidden;
+page->randomitemsButton.manipulator.inaccessible = isHidden;
+page->unfairitemsButton.isHidden = isHidden;
+page->unfairitemsButton.manipulator.inaccessible = isHidden;
+page->bsmadnessButton.isHidden = isHidden;
+page->bsmadnessButton.manipulator.inaccessible = isHidden;
+page->mushroomdashButton.isHidden = isHidden;
+page->mushroomdashButton.manipulator.inaccessible = isHidden;
+page->bumperkartsButton.isHidden = isHidden;
+page->bumperkartsButton.manipulator.inaccessible = isHidden;
+page->itemrampageButton.isHidden = isHidden;
+page->itemrampageButton.manipulator.inaccessible = isHidden;
+page->itemrainButton.isHidden = isHidden;
+page->itemrainButton.manipulator.inaccessible = isHidden;
+page->shellbreakButton.isHidden = isHidden;
+page->shellbreakButton.manipulator.inaccessible = isHidden;
+page->booststackerButton.isHidden = isHidden;
+page->booststackerButton.manipulator.inaccessible = isHidden;*/
     page->nextPage = PAGE_NONE;
     PushButton* button = &page->vsButton;
     u32 bmgId = UI::BMG_RACE_WITH11P;

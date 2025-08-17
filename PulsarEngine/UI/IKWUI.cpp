@@ -3,7 +3,7 @@
 namespace Pulsar {
 namespace UI {
 
-// Remove WW Button [Chadderz]
+//Remove WW Button [Chadderz]
 kmWrite16(0x8064B982, 0x00000005);
 kmWrite32(0x8064BA10, 0x60000000);
 kmWrite32(0x8064BA38, 0x60000000);
@@ -54,6 +54,28 @@ kmWrite32(0x80857AA0, 0x60000000);
 
 //Change Mission Button (Toadette Hack Fan)
 kmWrite8(0x808BE7C4, 0x51);
+
+//Never Get Suspended
+kmWrite32(0x80549898, 0x38600000);
+kmWrite32(0x8054989c, 0x4e800020);
+
+//Quick Vote Fade Out [Ro]
+kmWrite32(0x80643c88, 0x3860003C);
+
+//Replay in VS
+kmWrite16(0x8062c666, 0x00000020);
+kmWrite16(0x8062c6ae, 0x00000020);
+kmWrite16(0x8062c702, 0x00000020);
+kmWrite16(0x8062c756, 0x00000020);
+kmWrite16(0x8062c7aa, 0x00000020);
+kmWrite16(0x8062c7f2, 0x00000020);
+kmWrite16(0x8062c846, 0x00000020);
+kmWrite16(0x8062c89a, 0x00000020);
+kmWrite16(0x8085cc64, 0x00004800);
+kmWrite16(0x8085b446, 0x0000002E);
+kmWrite32(0x805a2914, 0x38000002);
+kmWrite8(0x8071225B, 0x00000000);
+kmWrite8(0x8085eddf, 0x00000020);
 
 }//namespace UI
 }//namespace Pulsar

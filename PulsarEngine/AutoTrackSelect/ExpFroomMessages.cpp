@@ -9,7 +9,7 @@ namespace UI {
 bool ExpFroomMessages::isOnModeSelection = false;
 s32 ExpFroomMessages::clickedButtonIdx = 0;
 
-void ExpFroomMessages::OnModeButtonClick(PushButton& button, u32 hudSlotId) {
+/*void ExpFroomMessages::OnModeButtonClick(PushButton& button, u32 hudSlotId) {
     this->clickedButtonIdx = button.buttonId;
     this->OnActivate();
 }
@@ -107,7 +107,7 @@ u32 CorrectModeButtonsBMG(const RKNet::ROOMPacket& packet) {
     }
     else return Pages::FriendRoomManager::GetMessageBmg(packet, 0);
 }
-kmCall(0x805dcb74, CorrectModeButtonsBMG);
+kmCall(0x805dcb74, CorrectModeButtonsBMG);*/
 
 void CorrectRoomStartButton(Pages::Globe::MessageWindow& control, u32 bmgId, Text::Info* info) {
     Network::SetGlobeMsgColor(control, -1);

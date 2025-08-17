@@ -135,17 +135,18 @@ void ExpSection::CreateAndInitPage(ExpSection& self, u32 id) {
         case PAGE_CUP_SELECT:
             page = new ExpCupSelect;
             break;
+        case PAGE_BATTLE_CUP_SELECT:
+            page = new ExpCupSelect;
+            break;
+        case PAGE_BATTLE_STAGE_SELECT:
+            page = self.CreatePageById(PAGE_COURSE_SELECT);
+            break;
         case PAGE_GHOST_SELECT:
             page = new ExpGhostSelect;
             break;
         case PAGE_FRIEND_ROOM:
             page = new ExpFroom;
             break;
-            /* not needed since only static vars
-        case PAGE_FRIEND_ROOM_MESSAGES:
-            page = new ExpFroomMessages;
-            break;
-            */
         case PAGE_OPTIONS:
             page = new ExpOptions;
             break;

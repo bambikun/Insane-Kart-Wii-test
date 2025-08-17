@@ -12,6 +12,7 @@
 #include <Config.hpp>
 #include <SlotExpansion/CupsConfig.hpp>
 #include <core/egg/DVD/DvdRipper.hpp>
+#include <MKVN.hpp>
 namespace Pulsar {
 
 System* System::sInstance = nullptr;
@@ -78,7 +79,7 @@ void System::Init(const ConfigFile& conf) {
     }
 
     //Track blocking 
-    u32 trackBlocking = this->info.GetTrackBlocking();
+    u32 trackBlocking = 32;
     this->netMgr.lastTracks = new PulsarId[trackBlocking];
     for(int i = 0; i < trackBlocking; ++i) this->netMgr.lastTracks[i] = PULSARID_NONE;
     const BMGHeader* const confBMG = &conf.GetSection<PulBMG>().header;
@@ -124,7 +125,7 @@ void System::UpdateContext() {
     bool isHAW = false;
     bool isKO = false;
     bool isOTT = false;
-    bool isMiiHeads = settings.GetSettingValue(Settings::SETTINGSTYPE_RACE, SETTINGRACE_RADIO_MII);
+    bool isMiiHeads = settings.GetSettingValue(Settings::SETTINGSTYPE_RACE2, SETTINGRACE_RADIO_MII);
 
     const RKNet::Controller* controller = RKNet::Controller::sInstance;
     const GameMode mode = racedataSettings.gamemode;
@@ -133,9 +134,25 @@ void System::UpdateContext() {
 
 
     bool is200 = racedataSettings.engineClass == CC_100 && this->info.Has200cc();
-    bool isFeather = this->info.HasFeather();
+    bool isFeather = true;
     bool isUMTs = this->info.HasUMTs();
     bool isMegaTC = this->info.HasMegaTC();
+    bool isPointsTime = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_POINT_DISTRO) == POINT_DISTRO_TIME;
+    bool isBombBlast = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_BOB_OMB_BLAST;
+    bool isInfiniteAcceleration = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_INFINITE_ACCELERATION;
+    bool isBananaSlip = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_BANANA_SLIP;
+    bool isRandomItems = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_RANDOM_ITEMS;
+    bool isUnfairItems = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_UNFAIR_ITEMS;
+    bool isBlueShellMadness = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_BLUE_SHELL_MADNESS;
+    bool isMushroomDash = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_MUSHROOM_DASH;
+    bool isBumperKarts = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_BUMPER_KARTS;
+    bool isRandomEffects = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_RANDOM_EFFECTS;
+    bool isItemRain = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_ITEM_RAIN;
+    bool isShellBreak = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_SHELL_BREAK;
+    bool isCrazyItems = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_CRAZY_ITEMS;
+    bool isRiibalanced = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_RIIBALANCED;
+    bool isUltrasEnabled = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_ULTRAS_ENABLED;
+    bool isKOFinal = settings.GetSettingValue(Settings::SETTINGSTYPE_KO, SETTINGKO_FINAL) == KOSETTING_FINAL_ALWAYS;
     u32 newContext = 0;
     if(sceneId != SCENE_ID_GLOBE && controller->connectionState != RKNet::CONNECTIONSTATE_SHUTDOWN) {
         switch(controller->roomType) {
@@ -145,18 +162,34 @@ void System::UpdateContext() {
                 break;
             case(RKNet::ROOMTYPE_FROOM_HOST):
             case(RKNet::ROOMTYPE_FROOM_NONHOST):
-                isCT = mode != MODE_BATTLE && mode != MODE_PUBLIC_BATTLE && mode != MODE_PRIVATE_BATTLE;
+                //isCT = mode != MODE_BATTLE && mode != MODE_PUBLIC_BATTLE && mode != MODE_PRIVATE_BATTLE;
                 newContext = netMgr.hostContext;
-                isHAW = newContext & (1 << PULSAR_HAW);
+                //isHAW = newContext & (1 << PULSAR_HAW);
                 isKO = newContext & (1 << PULSAR_MODE_KO);
                 isOTT = newContext & (1 << PULSAR_MODE_OTT);
                 isMiiHeads = newContext & (1 << PULSAR_MIIHEADS);
+                isPointsTime = newContext & (1 << PULSAR_POINT_DISTRO);
+                isBombBlast = newContext & (1 << PULSAR_MODE_BOMB_BLAST);
+                isInfiniteAcceleration = newContext & (1 << PULSAR_MODE_INFINITE_ACCELERATION);
+                isBananaSlip = newContext & (1 << PULSAR_MODE_BANANA_SLIP);
+                isRandomItems = newContext & (1 << PULSAR_MODE_RANDOM_ITEMS);
+                isUnfairItems = newContext & (1 << PULSAR_MODE_UNFAIR_ITEMS);
+                isBlueShellMadness = newContext & (1 << PULSAR_MODE_BLUE_SHELL_MADNESS);
+                isMushroomDash = newContext & (1 << PULSAR_MODE_MUSHROOM_DASH);
+                isBumperKarts = newContext & (1 << PULSAR_MODE_BUMPER_KARTS);
+                isRandomEffects = newContext & (1 << PULSAR_MODE_RANDOM_EFFECTS);
+                isItemRain = newContext & (1 << PULSAR_MODE_ITEM_RAIN);
+                isShellBreak = newContext & (1 << PULSAR_MODE_SHELL_BREAK);
+                isCrazyItems = newContext & (1 << PULSAR_MODE_CRAZY_ITEMS);
+                isRiibalanced = newContext & (1 << PULSAR_MODE_RIIBALANCED);
+                isUltrasEnabled = newContext & (1 << PULSAR_MODE_ULTRAS_ENABLED);
+                isKOFinal = newContext & (1 << PULSAR_KOFINAL);
                 if(isOTT) {
                     isUMTs &= newContext & (1 << PULSAR_UMTS);
                     isFeather &= newContext & (1 << PULSAR_FEATHER);
                 }
                 break;
-            default: isCT = false;
+            //default: isCT = false;
         }
     }
     else {
@@ -169,10 +202,12 @@ void System::UpdateContext() {
     }
     this->netMgr.hostContext = newContext;
 
-    u32 context = (isCT << PULSAR_CT) | (isHAW << PULSAR_HAW) | (isMiiHeads << PULSAR_MIIHEADS);
-    if(isCT) { //contexts that should only exist when CTs are on
-        context |= (is200 << PULSAR_200) | (isFeather << PULSAR_FEATHER) | (isUMTs << PULSAR_UMTS) | (isMegaTC << PULSAR_MEGATC) | (isOTT << PULSAR_MODE_OTT) | (isKO << PULSAR_MODE_KO);
-    }
+    u32 context = (isCT << PULSAR_CT) | (isMiiHeads << PULSAR_MIIHEADS);
+        context |= (is200 << PULSAR_200) | (isFeather << PULSAR_FEATHER) | (isUMTs << PULSAR_UMTS) | (isMegaTC << PULSAR_MEGATC) | (isOTT << PULSAR_MODE_OTT) | (isKO << PULSAR_MODE_KO) | (isPointsTime << PULSAR_POINT_DISTRO) 
+            | (isBombBlast << PULSAR_MODE_BOMB_BLAST) | (isInfiniteAcceleration << PULSAR_MODE_INFINITE_ACCELERATION) | (isBananaSlip << PULSAR_MODE_BANANA_SLIP) | (isRandomItems << PULSAR_MODE_RANDOM_ITEMS)
+            | (isUnfairItems << PULSAR_MODE_UNFAIR_ITEMS) | (isBlueShellMadness << PULSAR_MODE_BLUE_SHELL_MADNESS) | (isMushroomDash << PULSAR_MODE_MUSHROOM_DASH) | (isBumperKarts << PULSAR_MODE_BUMPER_KARTS)
+            | (isRandomEffects << PULSAR_MODE_RANDOM_EFFECTS) | (isItemRain << PULSAR_MODE_ITEM_RAIN) | (isShellBreak << PULSAR_MODE_SHELL_BREAK) | (isCrazyItems << PULSAR_MODE_CRAZY_ITEMS)
+            | (isRiibalanced << PULSAR_MODE_RIIBALANCED) | (isUltrasEnabled << PULSAR_MODE_ULTRAS_ENABLED) | (isKOFinal << PULSAR_KOFINAL);
     this->context = context;
 
     //Create temp instances if needed:
@@ -240,6 +275,12 @@ kmRegionWrite32(0x8088247D, 0x6B616E6A, 'K');
 kmRegionWrite32(0x80882481, 0x695F666F, 'K');
 kmRegionWrite16(0x80882485, 0x00006E74, 'K');
 kmRegionWrite8(0x8087E8B5, 0x0000007A, 'K');
+
+u8 GetTransmission(){
+    const GameMode gameMode = Racedata::sInstance->menusScenario.settings.gamemode;
+    const bool isFroom = gameMode == MODE_PRIVATE_VS || gameMode == MODE_PRIVATE_BATTLE;
+    return TRANSMISSION_DEFAULT;
+}
 
 const char System::pulsarString[] = "/Pulsar";
 const char System::CommonAssets[] = "/CommonAssets.szs";

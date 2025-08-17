@@ -169,7 +169,7 @@ namespace Pulsar_Pack_Creator.IO
                         }
                         if (hasCustomIcons)
                         {
-                            int size = 64;
+                            int size = 48;
                             foreach ((string, int) elem in customCupIcons)
                             {
                                 using (Image image = Image.FromFile(elem.Item1))
@@ -376,43 +376,44 @@ private Result WriteMainTrack(MainWindow.Cup.Track track, uint idx, string[] exp
 
     mainTracksList.Add(new PulsarGame.TrackV3(track.main, crc32, (short)track.variants.Count));
 
-    for (int mode = 0; mode < 4; mode++)
+for (int mode = 0; mode < 4; mode++)
+{
+    string expertName = expertFileNames[mode];
+    if (string.IsNullOrEmpty(expertName) || expertName == "RKG File")
+        continue;
+
+    if (buildParams != BuildParams.ConfigOnly)
     {
-        if (mode != 1) // Nur 150cc beibehalten, also 150Experts nutzen (mode == 1 entspricht 150cc)
+        string rkgName = $"input/{PulsarGame.ttModeFolders[mode, 1]}/{expertName}.rkg".ToLowerInvariant();
+        if (!inputFiles.Contains(rkgName))
         {
+            // Datei fehlt, einfach überspringen
             continue;
         }
-        
-        string expertName = expertFileNames[mode];
-        if (string.IsNullOrEmpty(expertName) || expertName == "RKG File")
+        try
         {
-            expertName = fileName; // Nutze stattdessen den fileName, aber mit .rkg Endung
-        }
-        
-        if (buildParams != BuildParams.ConfigOnly)
-        {
-            string rkgName = $"input/150Experts/{expertName}.rkg".ToLowerInvariant();
-            if (!inputFiles.Contains(rkgName))
-            {
-                error = $"{rkgName}";
-                return Result.FileNotFound;
-            }
             using BigEndianReader rkg = new BigEndianReader(File.Open(rkgName, FileMode.Open));
             rkg.BaseStream.Position = 0xC;
             ushort halfC = rkg.ReadUInt16();
-            ushort newC = (ushort)((halfC & ~(0x7F << 2)) + (0x26 << 2));
+            ushort newC = (ushort)((halfC & ~(0x7F << 2)) + (0x26 << 2)); //change ghostType to expert
 
             rkg.BaseStream.Position = 0;
-            byte[] rkgBytes = rkg.ReadBytes((int)(rkg.BaseStream.Length - 4));
-            using BigEndianWriter finalRkg = new BigEndianWriter(File.Create($"{modFolder}/Ghosts/Experts/{idx}_150cc.rkg"));
+            byte[] rkgBytes = rkg.ReadBytes((int)(rkg.BaseStream.Length - 4)); //-4 to remove crc32
+            using BigEndianWriter finalRkg = new BigEndianWriter(File.Create($"{modFolder}/Ghosts/Experts/{idx}_{PulsarGame.ttModeFolders[mode, 0]}.rkg"));
             rkgBytes[0xC] = (byte)(newC >> 8);
             rkgBytes[0xD] = (byte)(newC & 0xFF);
             finalRkg.Write(rkgBytes);
             int rkgCrc32 = BitConverter.ToInt32(System.IO.Hashing.Crc32.Hash(rkgBytes), 0);
             finalRkg.Write(rkgCrc32);
         }
-        trophyCount[mode]++;
+        catch (FileNotFoundException)
+        {
+            // Datei fehlt, überspringen
+            continue;
+        }
     }
+    trophyCount[mode]++;
+}
     return Result.Success;
 }
 
@@ -860,8 +861,9 @@ private Result WriteMainTrack(MainWindow.Cup.Track track, uint idx, string[] exp
                                     string rkgName = $"input/{PulsarGame.ttModeFolders[mode, 1]}/{expertName}.rkg".ToLowerInvariant();
                                     if (!inputFiles.Contains(rkgName))
                                     {
-                                        error = expertName;
-                                        return Result.FileNotFound;
+                                        //error = expertName;
+                                        //return Result.FileNotFound;
+                                        continue;
                                     }
                                     using BigEndianReader rkg = new BigEndianReader(File.Open(rkgName, FileMode.Open));
                                     rkg.BaseStream.Position = 0xC;

@@ -4,6 +4,9 @@
 #include <UI/ChangeCombo/ChangeCombo.hpp>
 #include <PulsarSystem.hpp>
 #include <Gamemodes/KO/KOMgr.hpp>
+#include <UI/TransmissionSelect.hpp>
+#include <UI/MultiTransmissionSelect.hpp>
+#include <Settings/SettingsParam.hpp>
 
 namespace Pulsar {
 namespace UI {
@@ -44,27 +47,34 @@ void ExpVR::OnInit() {
     Pages::SELECTStageMgr* selectStageMgr = section->Get<Pages::SELECTStageMgr>();
     CountDown* timer = &selectStageMgr->countdown;
 
-    Pages::CharacterSelect* charPage = section->Get<Pages::CharacterSelect>();
+Pages::CharacterSelect* charPage = section->Get<Pages::CharacterSelect>();
+if(charPage != nullptr) {
     charPage->timer = timer;
     charPage->ctrlMenuCharSelect.timer = timer;
+}
+Pages::KartSelect* kartPage = section->Get<Pages::KartSelect>();
+if(kartPage != nullptr) kartPage->timer = timer;
 
-    Pages::KartSelect* kartPage = section->Get<Pages::KartSelect>();
-    if(kartPage != nullptr) kartPage->timer = timer;
+Pages::BattleKartSelect* kartBattlePage = section->Get<Pages::BattleKartSelect>();
+if(kartBattlePage != nullptr) kartBattlePage->timer = timer;
 
-    Pages::BattleKartSelect* kartBattlePage = section->Get<Pages::BattleKartSelect>();
-    if(kartBattlePage != nullptr) kartBattlePage->timer = timer;
+Pages::MultiKartSelect* multiKartPage = section->Get<Pages::MultiKartSelect>();
+if(multiKartPage != nullptr) multiKartPage->timer = timer;
 
-    Pages::MultiKartSelect* multiKartPage = section->Get<Pages::MultiKartSelect>();
-    if(multiKartPage != nullptr) multiKartPage->timer = timer;
+Pulsar::UI::TransmissionSelect* transmissionPage = section->Get<Pulsar::UI::TransmissionSelect>();
+if(transmissionPage != nullptr) transmissionPage->timer = timer;
 
-    Pages::DriftSelect* driftPage = section->Get<Pages::DriftSelect>();
-    if(driftPage != nullptr) driftPage->timer = timer;
+Pages::DriftSelect* driftPage = section->Get<Pages::DriftSelect>();
+if(driftPage != nullptr) driftPage->timer = timer;
 
-    Pages::MultiDriftSelect* multiDriftPage = section->Get<Pages::MultiDriftSelect>();
-    if(multiDriftPage != nullptr) {
-        multiDriftPage->nextSectionOnButtonClick = SECTION_NONE;
-        multiDriftPage->timer = timer;
-    }
+Pulsar::UI::MultiTransmissionSelect* multiTransmissionPage = section->Get<Pulsar::UI::MultiTransmissionSelect>();
+if(multiTransmissionPage != nullptr) multiTransmissionPage->timer = timer;
+
+Pages::MultiDriftSelect* multiDriftPage = section->Get<Pages::MultiDriftSelect>();
+if(multiDriftPage != nullptr) {
+    multiDriftPage->nextSectionOnButtonClick = SECTION_NONE;
+    multiDriftPage->timer = timer;
+}
 
 }
 
@@ -136,8 +146,18 @@ static void AddChangeComboPages(Section* section, PageId id) {
     if(SectionMgr::sInstance->sectionParams->localPlayerCount == 2) {
         kartPage = PAGE_MULTIPLAYER_KART_SELECT;
         driftPage = PAGE_MULTIPLAYER_DRIFT_SELECT;
+        PageId transmissionPage = static_cast<PageId>(PAGE_MULTI_TRANSMISSION_SELECT);
+        Pulsar::UI::MultiTransmissionSelect* transmission = new(MultiTransmissionSelect);
+        section->Set(transmission, transmissionPage);
+        transmission->Init(transmissionPage);
     }
-    else if(isBattle) kartPage = PAGE_BATTLE_KART_SELECT;
+    else if(SectionMgr::sInstance->sectionParams->localPlayerCount == 1){
+        PageId transmissionPage = static_cast<PageId>(PAGE_TRANSMISSION_SELECT);
+        Pulsar::UI::TransmissionSelect* transmission = new(TransmissionSelect);
+        section->Set(transmission, transmissionPage);
+        transmission->Init(transmissionPage);
+    }
+    if(isBattle) kartPage = PAGE_BATTLE_KART_SELECT;
     section->CreateAndInitPage(kartPage);
     section->CreateAndInitPage(driftPage);
 }
@@ -167,12 +187,17 @@ ExpCharacterSelect::ExpCharacterSelect() : rouletteCounter(-1) {
 
 void ExpCharacterSelect::BeforeControlUpdate() {
     //CtrlMenuCharacterSelect::ButtonDriver* array = this->ctrlMenuCharSelect.driverButtonsArray;
+    static CharacterId lastSelected[2] = {CHARACTER_NONE, CHARACTER_NONE};
+    static int selectCooldown[2] = {0, 0};
+
     const s32 roulette = this->rouletteCounter;
     if(roulette > 0) {
         --this->rouletteCounter;
         this->controlsManipulatorManager.inaccessible = true;
     }
     for(int hudId = 0; hudId < SectionMgr::sInstance->sectionParams->localPlayerCount; ++hudId) {
+        if(selectCooldown[hudId] > 0) selectCooldown[hudId]--;
+
         const CharacterId prevChar = this->rolledCharIdx[hudId];
         Random random;
         const bool isGoodFrame = roulette % 4 == 1;
@@ -181,15 +206,18 @@ void ExpCharacterSelect::BeforeControlUpdate() {
             this->rolledCharIdx[hudId] = static_cast<CharacterId>(random.NextLimited(24));
         }
         if(isGoodFrame) {
-            this->ctrlMenuCharSelect.GetButtonDriver(prevChar)->HandleDeselect(hudId, -1);
+            CtrlMenuCharacterSelect::ButtonDriver* prevButton = this->ctrlMenuCharSelect.GetButtonDriver(prevChar);
             CtrlMenuCharacterSelect::ButtonDriver* nextButton = this->ctrlMenuCharSelect.GetButtonDriver(rolledCharIdx[hudId]);
+            prevButton->HandleDeselect(hudId, -1);
             nextButton->HandleSelect(hudId, -1);
             nextButton->Select(0);
-            //array[prevChar].HandleDeselect(0, -1);
-            //array[this->rolledCharIdx].HandleSelect(0, -1);
-
+            lastSelected[hudId] = rolledCharIdx[hudId];
         }
-        else if(roulette == 0) this->ctrlMenuCharSelect.GetButtonDriver(randomizedCharIdx[hudId])->HandleClick(hudId, -1);
+        else if(roulette == 0 && selectCooldown[hudId] == 0) {
+            this->ctrlMenuCharSelect.GetButtonDriver(randomizedCharIdx[hudId])->HandleClick(hudId, -1);
+            if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_MISC,SETTINGMENU_RADIO_FASTMENUS) == 2) selectCooldown[hudId] = 30;
+            else selectCooldown[hudId] = 150;
+        }
     }
 
     //array[this->randomizedCharIdx].HandleClick(0, -1);

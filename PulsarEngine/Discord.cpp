@@ -120,7 +120,7 @@ namespace Discord {
             if(U16_GAMEPLAY9 == 0x0001) details = "In a 1P VS (Item Rampage)";
             if(U16_GAMEPLAYA == 0x0001) details = "In a 1P VS (Item Rain)";
             if(U16_GAMEPLAYB == 0x0001) details = "In a 1P VS (Shell Break)";
-            if(U16_GAMEPLAYC == 0x0001) details = "In a 1P VS (Countdown)";
+            if(U16_GAMEPLAYC == 0x0001) details = "In a 1P VS (Crazy Items)";
             if(U16_GAMEPLAYD == 0x0001) details = "In a 1P VS (Riibalanced)";
             if(U16_GAMEPLAYE == 0x0001) details = "In a 1P VS (Ultras Allowed)";
                 break;
@@ -137,7 +137,7 @@ namespace Discord {
             if(U16_GAMEPLAY9 == 0x0001) details = "In a 2P VS (Item Rampage)";
             if(U16_GAMEPLAYA == 0x0001) details = "In a 2P VS (Item Rain)";
             if(U16_GAMEPLAYB == 0x0001) details = "In a 2P VS (Shell Break)";
-            if(U16_GAMEPLAYC == 0x0001) details = "In a 2P VS (Countdown)";
+            if(U16_GAMEPLAYC == 0x0001) details = "In a 2P VS (Crazy Items)";
             if(U16_GAMEPLAYD == 0x0001) details = "In a 2P VS (Riibalanced)";
             if(U16_GAMEPLAYE == 0x0001) details = "In a 2P VS (Ultras Allowed)";
                 break;
@@ -154,7 +154,7 @@ namespace Discord {
             if(U16_GAMEPLAY9 == 0x0001) details = "In a 3P VS (Item Rampage)";
             if(U16_GAMEPLAYA == 0x0001) details = "In a 3P VS (Item Rain)";
             if(U16_GAMEPLAYB == 0x0001) details = "In a 3P VS (Shell Break)";
-            if(U16_GAMEPLAYC == 0x0001) details = "In a 3P VS (Countdown)";
+            if(U16_GAMEPLAYC == 0x0001) details = "In a 3P VS (Crazy Items)";
             if(U16_GAMEPLAYD == 0x0001) details = "In a 3P VS (Riibalanced)";
             if(U16_GAMEPLAYE == 0x0001) details = "In a 3P VS (Ultras Allowed)";
                 break;
@@ -171,7 +171,7 @@ namespace Discord {
             if(U16_GAMEPLAY9 == 0x0001) details = "In a 4P VS (Item Rampage)";
             if(U16_GAMEPLAYA == 0x0001) details = "In a 4P VS (Item Rain)";
             if(U16_GAMEPLAYB == 0x0001) details = "In a 4P VS (Shell Break)";
-            if(U16_GAMEPLAYC == 0x0001) details = "In a 4P VS (Countdown)";
+            if(U16_GAMEPLAYC == 0x0001) details = "In a 4P VS (Crazy Items)";
             if(U16_GAMEPLAYD == 0x0001) details = "In a 4P VS (Riibalanced)";
             if(U16_GAMEPLAYE == 0x0001) details = "In a 4P VS (Ultras Allowed)";
                 break;
@@ -188,7 +188,7 @@ namespace Discord {
             if(U16_GAMEPLAY9 == 0x0001) details = "In a 1P Team VS (Item Rampage)";
             if(U16_GAMEPLAYA == 0x0001) details = "In a 1P Team VS (Item Rain)";
             if(U16_GAMEPLAYB == 0x0001) details = "In a 1P Team VS (Shell Break)";
-            if(U16_GAMEPLAYC == 0x0001) details = "In a 1P Team VS (Countdown)";
+            if(U16_GAMEPLAYC == 0x0001) details = "In a 1P Team VS (Crazy Items)";
             if(U16_GAMEPLAYD == 0x0001) details = "In a 1P Team VS (Riibalanced)";
             if(U16_GAMEPLAYE == 0x0001) details = "In a 1P Team VS (Ultras Allowed)";
                 break;
@@ -205,7 +205,7 @@ namespace Discord {
             if(U16_GAMEPLAY9 == 0x0001) details = "In a 2P Team VS (Item Rampage)";
             if(U16_GAMEPLAYA == 0x0001) details = "In a 2P Team VS (Item Rain)";
             if(U16_GAMEPLAYB == 0x0001) details = "In a 2P Team VS (Shell Break)";
-            if(U16_GAMEPLAYC == 0x0001) details = "In a 2P Team VS (Countdown)";
+            if(U16_GAMEPLAYC == 0x0001) details = "In a 2P Team VS (Crazy Items)";
             if(U16_GAMEPLAYD == 0x0001) details = "In a 2P Team VS (Riibalanced)";
             if(U16_GAMEPLAYE == 0x0001) details = "In a 2P Team VS (Ultras Allowed)";
                 break;
@@ -222,7 +222,7 @@ namespace Discord {
             if(U16_GAMEPLAY9 == 0x0001) details = "In a 3P Team VS (Item Rampage)";
             if(U16_GAMEPLAYA == 0x0001) details = "In a 3P Team VS (Item Rain)";
             if(U16_GAMEPLAYB == 0x0001) details = "In a 3P Team VS (Shell Break)";
-            if(U16_GAMEPLAYC == 0x0001) details = "In a 3P Team VS (Countdown)";
+            if(U16_GAMEPLAYC == 0x0001) details = "In a 3P Team VS (Crazy Items)";
             if(U16_GAMEPLAYD == 0x0001) details = "In a 3P Team VS (Riibalanced)";
             if(U16_GAMEPLAYE == 0x0001) details = "In a 3P Team VS (Ultras Allowed)";
                 break;
@@ -239,7 +239,7 @@ namespace Discord {
             if(U16_GAMEPLAY9 == 0x0001) details = "In a 4P Team VS (Item Rampage)";
             if(U16_GAMEPLAYA == 0x0001) details = "In a 4P Team VS (Item Rain)";
             if(U16_GAMEPLAYB == 0x0001) details = "In a 4P Team VS (Shell Break)";
-            if(U16_GAMEPLAYC == 0x0001) details = "In a 4P Team VS (Countdown)";
+            if(U16_GAMEPLAYC == 0x0001) details = "In a 4P Team VS (Crazy Items)";
             if(U16_GAMEPLAYD == 0x0001) details = "In a 4P Team VS (Riibalanced)";
             if(U16_GAMEPLAYE == 0x0001) details = "In a 4P Team VS (Ultras Allowed)";
                 break;
@@ -317,7 +317,7 @@ namespace Discord {
             if(U16_GAMEPLAY9 == 0x0001) details = "In a WiFi VS (Item Rampage)";
             if(U16_GAMEPLAYA == 0x0001) details = "In a WiFi VS (Item Rain)";
             if(U16_GAMEPLAYB == 0x0001) details = "In a WiFi VS (Shell Break)";
-            if(U16_GAMEPLAYC == 0x0001) details = "In a WiFi VS (Countdown)";
+            if(U16_GAMEPLAYC == 0x0001) details = "In a WiFi VS (Crazy Items)";
             if(U16_GAMEPLAYD == 0x0001) details = "In a WiFi VS (Riibalanced)";
             if(U16_GAMEPLAYE == 0x0001) details = "In a WiFi VS (Ultras Allowed)";
                 break;
@@ -339,7 +339,7 @@ namespace Discord {
             if(U16_GAMEPLAY9 == 0x0001) details = "In a WiFi Friend VS (Item Rampage)";
             if(U16_GAMEPLAYA == 0x0001) details = "In a WiFi Friend VS (Item Rain)";
             if(U16_GAMEPLAYB == 0x0001) details = "In a WiFi Friend VS (Shell Break)";
-            if(U16_GAMEPLAYC == 0x0001) details = "In a WiFi Friend VS (Countdown)";
+            if(U16_GAMEPLAYC == 0x0001) details = "In a WiFi Friend VS (Crazy Items)";
             if(U16_GAMEPLAYD == 0x0001) details = "In a WiFi Friend VS (Riibalanced)";
             if(U16_GAMEPLAYE == 0x0001) details = "In a WiFi Friend VS (Ultras Allowed)";
                 break;
@@ -357,7 +357,7 @@ namespace Discord {
             if(U16_GAMEPLAY9 == 0x0001) details = "In a WiFi Friend Team VS (Item Rampage)";
             if(U16_GAMEPLAYA == 0x0001) details = "In a WiFi Friend Team VS (Item Rain)";
             if(U16_GAMEPLAYB == 0x0001) details = "In a WiFi Friend Team VS (Shell Break)";
-            if(U16_GAMEPLAYC == 0x0001) details = "In a WiFi Friend Team VS (Countdown)";
+            if(U16_GAMEPLAYC == 0x0001) details = "In a WiFi Friend Team VS (Crazy Items)";
             if(U16_GAMEPLAYD == 0x0001) details = "In a WiFi Friend Team VS (Riibalanced)";
             if(U16_GAMEPLAYE == 0x0001) details = "In a WiFi Friend Team VS (Ultras Allowed)";
                 break;

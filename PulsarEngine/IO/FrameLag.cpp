@@ -53,7 +53,7 @@ void EveryFrame(ElineMgr* _this) {
 void InitNewRace(RacedataScenario* scenario) {
     scenario->UpdateFromPrevRace();
     raceStartTime = 0;
-    OS::Report("New race started\n");
+    //OS::Report("New race started\n");
 }
 
 kmCall(0x8052fbd8, InitNewRace);

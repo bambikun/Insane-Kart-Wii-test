@@ -11,12 +11,8 @@ u32 CtrlRaceTrackInfoDisplay::lastCourse = -1;
 
 u32 CtrlRaceTrackInfoDisplay::Count() {
     const u32 gamemode = Racedata::sInstance->racesScenario.settings.gamemode;
-    if((gamemode == MODE_GRAND_PRIX) || (gamemode == MODE_VS_RACE) || (gamemode == MODE_PUBLIC_VS) || (gamemode == MODE_PRIVATE_VS)) return 1;
+    if((gamemode == MODE_GRAND_PRIX) || (gamemode == MODE_VS_RACE) || (gamemode == MODE_PUBLIC_VS) || (gamemode == MODE_PRIVATE_VS) || (gamemode == MODE_BATTLE) || (gamemode == MODE_PUBLIC_BATTLE) || (gamemode == MODE_PRIVATE_BATTLE) || (gamemode == MODE_TIME_TRIAL)) return 1;
     const PulsarId winning = CupsConfig::sInstance->GetWinning();
-    if(gamemode == MODE_TIME_TRIAL && winning != lastCourse) {
-        lastCourse = winning;
-        return 1;
-    }
     return 0;
 }
 void CtrlRaceTrackInfoDisplay::Create(Page& page, u32 index, u32) {

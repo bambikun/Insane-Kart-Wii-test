@@ -37,11 +37,11 @@ namespace Pulsar_Pack_Creator
 
             foreach (string cur in namesImport)
             {
-                if (!CheckTrackName(cur))
+                /*if (!CheckTrackName(cur))
                 {
                     MsgWindow.Show($"Track {cur} has an invalid name as it contains one of <>:\"/|?", this);
                     return;
-                }
+                }*/
             }
             if (namesImport.Length != iconImport.Length)
             {

@@ -10,7 +10,10 @@ namespace UI {
 
 kmWrite32(0x805d8260, 0x60000000); //nop initcontrolgroup
 
-ExpFroom::ExpFroom() : areControlsHidden(false) {
+ExpFroom::ExpFroom()
+    : areControlsHidden(false)
+    , topSettingsPage(SettingsPanel::id) // <- Initialisiere mit gültigem PageId!
+{
     this->onSettingsClickHandler.subject = this;
     this->onSettingsClickHandler.ptmf = &ExpFroom::OnSettingsButtonClick;
     this->onTeamsClickHandler.subject = this;
@@ -21,17 +24,22 @@ ExpFroom::ExpFroom() : areControlsHidden(false) {
 }
 
 void ExpFroom::OnInit() {
-
-    this->InitControlGroup(7); //5 usually + settings button + teams button
+    this->InitControlGroup(8); // 5 Standard + Settings + Teams + Kick
     FriendRoom::OnInit();
 
-    this->AddControl(5, teamsButton, 0);
+    this->AddControl(5, settingsButton, 0);
+    this->settingsButton.Load(UI::buttonFolder, "FroomButton", "Settings", 1, 0, false);
+    this->settingsButton.buttonId = 5;
+    this->settingsButton.SetOnClickHandler(this->onSettingsClickHandler, 0);
+    this->settingsButton.SetOnSelectHandler(this->onButtonSelectHandler);
+
+    this->AddControl(6, teamsButton, 0);
     this->teamsButton.Load(UI::buttonFolder, "FroomButton", "Teams", 1, 0, false);
     this->teamsButton.buttonId = 6;
     this->teamsButton.SetOnClickHandler(this->onTeamsClickHandler, 0);
     this->teamsButton.SetOnSelectHandler(this->onButtonSelectHandler);
 
-    this->AddControl(6, kickButton, 0);
+    this->AddControl(7, kickButton, 0);
     this->kickButton.Load(UI::buttonFolder, "FroomButton", "Kick", 1, 0, false);
     this->kickButton.buttonId = 7;
     this->kickButton.SetOnClickHandler(this->onKickClickHandler, 0);
@@ -52,13 +60,14 @@ void ExpFroom::ExtOnButtonSelect(PushButton& button, u32 hudSlotId) {
         this->bottomText.SetMessage(bmgId, 0);
     }
     else if(button.buttonId == 6) this->bottomText.SetMessage(BMG_TEAMS_BOTTOM, 0);
-    else if (button.buttonId == 7) this->bottomText.SetMessage(BMG_KICK_BOTTOM, 0);
+    else if(button.buttonId == 7) this->bottomText.SetMessage(BMG_KICK_BOTTOM, 0);
     else this->OnButtonSelect(button, hudSlotId);
 }
 
 void ExpFroom::OnSettingsButtonClick(PushButton& button, u32 hudSlotId) {
     this->areControlsHidden = true;
     ExpSection::GetSection()->GetPulPage<SettingsPanel>()->prevPageId = PAGE_FRIEND_ROOM;
+    // Safety: topSettingsPage sollte gültig sein!
     this->AddPageLayer(static_cast<PageId>(this->topSettingsPage), 0);
 }
 
@@ -89,7 +98,7 @@ void ExpFroom::AfterControlUpdate() {
     globe->miiName.isHidden = hidden;
     for(FriendMatchingPlayer* player = &mgr->miiIcons[0]; player < &mgr->miiIcons[24]; player++) player->isHidden = hidden;
     mgr->titleText.isHidden = hidden;
-    if(hidden) { //these get updated by the game too, so only need to update their isHidden when they should be forced hidden
+    if(hidden) {
         this->startButton.isHidden = hidden;
         this->addFriendsButton.isHidden = hidden;
         waiting->messageWindow.isHidden = hidden;
@@ -97,9 +106,8 @@ void ExpFroom::AfterControlUpdate() {
         GlobeMgr* globeMgr = GlobeMgr::sInstance;
         globeMgr->earthmodel->isMiiShown = false;
         globeMgr->ResetGlobeMii();
-
     }
-    else { //if controls are enabled, teamsButton is only visible for hosts when >2players in room
+    else {
         const RKNet::Controller* controller = RKNet::Controller::sInstance;
         const RKNet::ControllerSub& sub = controller->subs[controller->currentSub];
         bool teamHidden = true;

@@ -10,7 +10,6 @@
 #include <Debug/Debug.hpp>
 #include <PulsarSystem.hpp>
 #include <IO/IO.hpp>
-#include <MKVN.hpp>
 
 namespace Pulsar {
 namespace Debug {
@@ -67,13 +66,14 @@ void LaunchSoftware() { //If dolphin, restarts game, else launches Riivo->HBC->O
 //Show StackTrace
 kmWrite32(0x80023948, 0x281e0007);
 //Max number of lines
-//kmWrite32(0x80009324, 0x38800068);
+kmWrite32(0x80009324, 0x38800068);
 
 //Lines on the screen and x-pos
 static void SetConsoleParams() {
     db::detail::ConsoleHead* console = EGG::Exception::console;
-    console->viewLines = 0xE;
+    console->viewLines = 0x14;
     console->viewPosX = 0x5;
+    console->viewPosY = 0x11;
 }
 BootHook ConsoleParams(SetConsoleParams, 1);
 
@@ -113,13 +113,14 @@ static void WriteHeaderCrash(u16 error, const OS::Context* context, u32 dsisr, u
     crashError = error;
     crashThread = const_cast<OS::Thread*>(reinterpret_cast<const OS::Thread*>(context));
     db::ExceptionHead& exception = db::ExceptionHead::mInstance;
-    exception.displayedInfo = 0x10;
+    exception.displayedInfo = 0x23;
     exception.callbackArgs = nullptr;
 
     //char endMsg[512];
     //snprintf(endMsg, 512, "Press A%s and send a clip\nof the crash or the crash.pul file to the pack\ncreator to help fix the bug.\n", outcome);
-    db::Exception_Printf_("Oops. Insane Kart Wii just crashed.\n\nIf this is the first time, try to replicate it.\nIf it happened multiple times, report this\ncrash with the Crash.pul to\nToadette Hack Fan on Discord:\n\n\nhttps://discord.gg/kSyHsQGUWf\n\n\nPress A to exit and save the Crash.pul.\nWe are sorry for the inconvenience.");
-    //db::PrintContext_(error, context, dsisr, dar);
+
+    db::Exception_Printf_("Oops. Insane Kart Wii just crashed.\n\nIf this is the first time, try to replicate it.\nIf it happened multiple times, report this\ncrash with the Crash.pul to\nToadette Hack Fan on Discord:\n\nhttps://discord.gg/kSyHsQGUWf\n\nPress A to exit and save the Crash.pul.\nWe are sorry for the inconvenience.\n\nIKW Version: v2.1.0\n\n\n\n\n\nScroll down for further crash info\n\n\n");
+    db::PrintContext_(error, context, dsisr, dar);
 
 }
 kmCall(0x80023484, WriteHeaderCrash);

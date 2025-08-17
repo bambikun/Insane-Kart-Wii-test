@@ -112,6 +112,7 @@ void OnButtonClick(Pages::SinglePlayer* page, PushButton& button, u32 hudSlotId)
     U16_GAMEPLAY2 = 0x0000;
     U16_GAMEPLAY1 = 0x0000;
     U16_FREE_ROAM = 0x0000;
+    GameModeOnline = 0x00;
     if(page->externControlCount > 4 && id == page->externControlCount - 1) {
         ExpSection::GetSection()->GetPulPage<SettingsPanel>()->prevPageId = PAGE_SINGLE_PLAYER_MENU;
         page->nextPageId = static_cast<PageId>(SettingsPanel::id);
@@ -125,59 +126,73 @@ void OnButtonClick(Pages::SinglePlayer* page, PushButton& button, u32 hudSlotId)
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 3) {
         U16_GAMEPLAYE = 0x0001;
+        GameModeOnline = 0x0E;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 4) {
         U16_GAMEPLAYD = 0x0001;
+        GameModeOnline = 0x0D;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 5) {
         U16_GAMEPLAYC = 0x0001;
         U16_GAMEPLAYC2 = 0x0001;
+        GameModeOnline = 0x0C;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 6) {
         U16_GAMEPLAYB = 0x0001;
+        GameModeOnline = 0x0B;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 7) {
         U16_GAMEPLAYA = 0x0001;
+        GameModeOnline = 0x0A;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 8) {
         U16_GAMEPLAY9 = 0x0001;
+        GameModeOnline = 0x09;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 9) {
         U16_GAMEPLAY8 = 0x0001;
+        GameModeOnline = 0x08;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 10) {
         U16_GAMEPLAY7 = 0x0001;
+        GameModeOnline = 0x07;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 11) {
         U16_GAMEPLAY6 = 0x0001;
+        GameModeOnline = 0x06;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 12) {
         U16_GAMEPLAY5 = 0x0001;
+        GameModeOnline = 0x05;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 13) {
         U16_GAMEPLAY4 = 0x0001;
+        GameModeOnline = 0x04;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 14) {
         U16_GAMEPLAY3 = 0x0001;
+        GameModeOnline = 0x03;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 15) {
         U16_GAMEPLAY2 = 0x0001;
+        GameModeOnline = 0x02;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 16) {
         U16_GAMEPLAY1 = 0x0001;
+        GameModeOnline = 0x01;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 17) {
         U16_FREE_ROAM = 0x0001;
+        GameModeOnline = 0x10;
     }
     else if (page->externControlCount > 5 && id == page->externControlCount - 2) U8_OFFLINE_FLAG = 0x0;
-    else if (page->externControlCount > 5 && id != page->externControlCount - 2 && Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW6,SETTINGS_LAP_COUNT) != 0) U8_OFFLINE_FLAG = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW6,SETTINGS_LAP_COUNT);
+    else if (page->externControlCount > 5 && id != page->externControlCount - 2 && Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE2,SETTINGS_LAP_COUNT) != 0) U8_OFFLINE_FLAG = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE2,SETTINGS_LAP_COUNT);
 
     if(id == 1 || id == 4 || id == 5 || id == 6 || id == 7) {
         U8_OFFLINE_FLAG = 0x0;
         button.buttonId = 1;
     }
     if(id > 6 && id != 7 && id != 23) button.buttonId = 2;
-    U32_TEST_IDS = id;
     page->Pages::SinglePlayer::OnButtonClick(button, hudSlotId);
     button.buttonId = id;
     System* system = System::sInstance;

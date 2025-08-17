@@ -28,12 +28,6 @@ ExpCupSelect::ExpCupSelect() {
 
     CupsConfig* cupsConfig = CupsConfig::sInstance;
     cupsConfig->ToggleCTs(System::sInstance->IsContext(PULSAR_CT));
-    if (cupsConfig->GetTotalCupCount() <= 8) {
-        this->arrows.leftArrow.manipulator.inaccessible = true;
-        this->arrows.leftArrow.isHidden = true;
-        this->arrows.rightArrow.manipulator.inaccessible = true;
-        this->arrows.rightArrow.isHidden = true;
-    }
 }
 
 void ExpCupSelect::OnActivate() {
@@ -75,17 +69,23 @@ UIControl* ExpCupSelect::CreateControl(u32 controlId) {
 }
 
 void ExpCupSelect::OnRightArrowSelect(SheetSelectControl& control, u32 hudSlotId) {
+    if(U8_BATTLE_CHECK != 0x01) {
     if(U8_MENU == 0x01) this->OnArrowSelect(2);
     if(U8_MENU == 0x02) this->OnArrowSelect(4);
     if(U8_MENU == 0x03) this->OnArrowSelect(6);
     if(U8_MENU == 0x04) this->OnArrowSelect(8);
+    }
+    else this->OnArrowSelect(2);
 }
 
 void ExpCupSelect::OnLeftArrowSelect(SheetSelectControl& control, u32 hudSlotId) {
+    if(U8_BATTLE_CHECK != 0x01) {
     if(U8_MENU == 0x01) this->OnArrowSelect(-2);
     if(U8_MENU == 0x02) this->OnArrowSelect(-4);
     if(U8_MENU == 0x03) this->OnArrowSelect(-6);
     if(U8_MENU == 0x04) this->OnArrowSelect(-8);
+    }
+    else this->OnArrowSelect(-2);
 }
 
 void ExpCupSelect::OnArrowSelect(s32 direction) {
@@ -103,9 +103,7 @@ void ExpCupSelect::OnArrowSelect(s32 direction) {
 }
 
 void ExpCupSelect::OnStartPress(u32 hudSlotId) {
-    const GameMode gamemode = Racedata::sInstance->menusScenario.settings.gamemode;
-    const bool isValid = gamemode == MODE_TIME_TRIAL || gamemode == MODE_VS_RACE;
-    if (isValid && this->randomizedId == -1) {
+    if (this->randomizedId == -1) {
         this->randomizedId = CupsConfig::sInstance->RandomizeTrack();
         for (int i = 0; i < 8; ++i) reinterpret_cast<PushButton**>(this->ctrlMenuCupSelectCup.childrenGroup.controlArray)[i]->manipulator.inaccessible = true;
         this->arrows.leftArrow.manipulator.inaccessible = true;
@@ -117,12 +115,6 @@ void ExpCupSelect::OnStartPress(u32 hudSlotId) {
 void ExpCupSelect::AfterControlUpdate() {
     CupSelect::AfterControlUpdate();
     CupsConfig* cupsConfig = CupsConfig::sInstance;
-    const GameMode gamemode = Racedata::sInstance->menusScenario.settings.gamemode;
-    const bool isValid = gamemode == MODE_TIME_TRIAL || gamemode == MODE_VS_RACE;
-    if (!isValid) {
-        this->randomControl.isHidden = true;
-    }
-    else {
         this->randomControl.isHidden = false;
         PushButton** buttons = reinterpret_cast<PushButton**>(this->ctrlMenuCupSelectCup.childrenGroup.controlArray);
         if (this->randomizedId != PULSARID_NONE) {
@@ -166,7 +158,6 @@ void ExpCupSelect::AfterControlUpdate() {
             }
 
         }
-    }
 }
 
 void ExpCupSelect::OnBackPress(u32 hudSlotId) {

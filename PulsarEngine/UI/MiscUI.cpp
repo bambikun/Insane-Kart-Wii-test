@@ -11,6 +11,7 @@
 #include <Debug/Debug.hpp>
 #include <UI/UI.hpp>
 #include <MKVN.hpp>
+#include <MarioKartWii/UI/Section/SectionMgr.hpp>
 
 
 
@@ -35,8 +36,10 @@ static PageId AfterWifiResults(PageId id) {
 kmBranch(0x80646754, AfterWifiResults);
 
 //Credit to Kazuki for making the original ASM code, and Brawlbox for porting it to C++
+//Global reroute: force single-player Battle "next battle" to go to VS "next race" (Cup Selection)
 static void LaunchRiivolutionButton(SectionMgr* sectionMgr) {
-    const SectionId id = sectionMgr->nextSectionId;
+    SectionId id = sectionMgr->nextSectionId;
+
     if (id == SECTION_CHANNEL_FROM_MENU || id == SECTION_CHANNEL_FROM_CHECK_RANKINGS || id == SECTION_CHANNEL_FROM_DOWNLOADS) Debug::LaunchSoftware();
     else sectionMgr->LoadSection();
 }

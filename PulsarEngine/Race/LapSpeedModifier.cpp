@@ -9,6 +9,8 @@
 #include <MKVN.hpp>
 #include <Settings/SettingsParam.hpp>
 #include <MarioKartWii/UI/Section/SectionMgr.hpp>
+#include <MarioKartWii/Race/RaceData.hpp>
+#include <MarioKartWii/Audio/RaceMgr.hpp>
 
 namespace Pulsar {
 namespace Race {
@@ -18,7 +20,7 @@ RaceinfoPlayer* LoadCustomLapCount(RaceinfoPlayer* player, u8 id) {
     if (lapCount == 0) {
         lapCount = 3;
     }
-    if (U8_OFFLINE_FLAG != 0x00) {
+    if (U8_OFFLINE_FLAG != 0x00 && U16_MISSION_MODE_FIX != 0x0001) {
         lapCount = U8_OFFLINE_FLAG;
     }
     Racedata::sInstance->racesScenario.settings.lapCount = lapCount;
@@ -26,16 +28,55 @@ RaceinfoPlayer* LoadCustomLapCount(RaceinfoPlayer* player, u8 id) {
 }
 kmCall(0x805328d4, LoadCustomLapCount);
 
+void LogMaxLocalCurrentLapOnPageLoad() {
+    u8 lapCount = KMP::Manager::sInstance->stgiSection->holdersArray[0]->raw->lapCount;
+    if (U8_OFFLINE_FLAG != 0x00) {
+        lapCount = U8_OFFLINE_FLAG;
+    }
+    if(Raceinfo::sInstance == nullptr || Racedata::sInstance == nullptr) return;
+    Audio::RaceMgr* raceAudioMgr = Audio::RaceMgr::sInstance;
+    u32 maxLap = 0;
+    for(int i = 0; i < Racedata::sInstance->racesScenario.playerCount; ++i) {
+        const RacedataPlayer& rdp = Racedata::sInstance->racesScenario.players[i];
+        if(rdp.realControllerChannel >= 0) {
+            RaceinfoPlayer* player = Raceinfo::sInstance->players[i];
+            if(player != nullptr && player->currentLap > maxLap) {
+                maxLap = player->currentLap;
+            }
+            if(player != nullptr) U32_TEST_CURRENT_KCP = player->raceCompletionMax;
+        }
+    }
+    if(maxLap == 0) {
+        Pulsar::System::sInstance->currentLap = 0;
+    }
+    if(maxLap > Pulsar::System::sInstance->currentLap) {
+        Pulsar::System::sInstance->currentLap = maxLap;
+    }
+    U32_MUSIC_SPEED = 1.0f;
+    if(Pulsar::System::sInstance->currentLap > 1 && Pulsar::System::sInstance->currentLap < lapCount && (raceAudioMgr->raceState == 0x4 || raceAudioMgr->raceState == 0x6)) {
+        if(U32_TEST_IDS == 0x809 || (U32_TEST_IDS >= 0xE9E && U32_TEST_IDS <= 0xEA5) || U32_TEST_IDS == 0x109E || U32_TEST_IDS == 0x116A || U32_TEST_IDS == 0x12CD) {
+        U32_MUSIC_SPEED = (Pulsar::System::sInstance->currentLap * 0.02) + 1.0f - 0.02f;
+        }
+    }
+}
+static RaceFrameHook LOG_LAP(LogMaxLocalCurrentLapOnPageLoad);
+
 void OfflineFlag() {
     const SectionId section = SectionMgr::sInstance->curSection->sectionId;
     if(section == SECTION_SINGLE_P_FROM_MENU || section == SECTION_SINGLE_P_TT_CHANGE_CHARA || section == SECTION_SINGLE_P_TT_CHANGE_COURSE || section == SECTION_SINGLE_P_VS_NEXT_RACE || section == SECTION_LOCAL_MULTIPLAYER) {
-        U8_OFFLINE_FLAG = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW6,SETTINGS_LAP_COUNT);
+        U8_OFFLINE_FLAG = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE2,SETTINGS_LAP_COUNT);
     }
     if(section == SECTION_MAIN_MENU_FROM_BOOT || section == SECTION_MAIN_MENU_FROM_RESET || section == SECTION_MAIN_MENU_FROM_MENU || section == SECTION_MAIN_MENU_FROM_NEW_LICENSE || section == SECTION_MAIN_MENU_FROM_LICENSE || TTS_CHECK == 0x00000001) {
         U8_OFFLINE_FLAG = 0x00;
     }
+    if(section == SECTION_P1_WIFI_VS || section == SECTION_P2_WIFI_VS) {
+        if(U8_OFFLINE_FLAG != 0x00) {
+            U8_OFFLINE_FLAG = 0x09;
+            Pulsar::Debug::FatalError("Error 99");
+    }
 }
-static SectionLoadHook OFFLINE(OfflineFlag);
+}
+static PageLoadHook OFFLINE(OfflineFlag);
 
 //kmWrite32(0x80723d64, 0x7FA4EB78);
 void DisplayCorrectLap(AnmTexPatHolder* texPat) { //This Anm is held by a ModelDirector in a Lakitu::Player

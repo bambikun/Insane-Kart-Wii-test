@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulsar Pack Creator", "Pulsar Pack Creator.csproj", "{398B9557-EAE5-D8FA-9919-7CE73D6A2DFD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{398B9557-EAE5-D8FA-9919-7CE73D6A2DFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{398B9557-EAE5-D8FA-9919-7CE73D6A2DFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{398B9557-EAE5-D8FA-9919-7CE73D6A2DFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{398B9557-EAE5-D8FA-9919-7CE73D6A2DFD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {45D52789-6631-4060-B6F2-57DDD4D1FCFE}
+	EndGlobalSection
+EndGlobal

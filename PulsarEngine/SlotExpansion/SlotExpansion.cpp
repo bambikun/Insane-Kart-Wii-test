@@ -4,6 +4,7 @@
 #include <MarioKartWii/UI/Page/Other/Votes.hpp>
 #include <MarioKartWii/GlobalFunctions.hpp>
 #include <SlotExpansion/CupsConfig.hpp>
+#include <MKVN.hpp>
 
 namespace Pulsar {
 
@@ -66,11 +67,14 @@ static void FormatTrackPath(char* path, u32 length, const char* format, const ch
 
         const u8 variantIdx = cupsConfig->GetCurVariantIdx();
         const char* format;
-        if (variantIdx == 0) format = "Race/Course/%d";
-        else format = "Race/Course/%d_%d";
+        if (U8_BATTLE_CHECK == 0x1) format = "Race/Battle/%d";
+        else format = "Race/Course/%d";
 
         if (cupsConfig->HasOddCups() && pulsarId >= (cupsConfig->GetCtsTrackCount() - 4)) pulsarId = static_cast<PulsarId>(pulsarId % 4);
-        snprintf(path, 0x80, format, CupsConfig::ConvertTrack_PulsarIdToRealId(pulsarId), variantIdx);
+        if(U8_BATTLE_CHECK == 0x0) snprintf(path, 0x80, format, CupsConfig::ConvertTrack_PulsarIdToRealId(pulsarId), variantIdx);
+        if(U8_BATTLE_CHECK == 0x1) snprintf(path, 0x80, format, CupsConfig::ConvertTrack_PulsarIdToRealId(pulsarId) - 4968, variantIdx);
+        OS::Report("Formatted track path: %s, pulsarId: %d, variantIdx: %d", path, pulsarId, variantIdx);
+        U32_TEST_IDS = CupsConfig::ConvertTrack_PulsarIdToRealId(pulsarId), variantIdx;
     }
 }
 kmCall(0x80540820, FormatTrackPath);

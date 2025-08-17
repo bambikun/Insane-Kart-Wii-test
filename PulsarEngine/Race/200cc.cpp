@@ -72,8 +72,12 @@ bool IsBrakeDrifting(const Kart::Status& status) {
     if(AntiCheat == 0x00000002) {
         u32 bitfield0 = status.bitfield0;
         const Input::ControllerHolder& controllerHolder = status.link->GetControllerHolder();
+        if((bitfield0 & 0x40000) != 0 && (bitfield0 & 0x1F) == 0xF && (bitfield0 & 0x80000000) == 0
+            && (controllerHolder.inputStates[0].buttonActions & 0x10) != 0x0 && TTS_CHECK == 0x00000000) {
+            return true;
+        }
         if((bitfield0 & 0x40000) != 0 && (bitfield0 & 0x1F) == 0xF && (bitfield0 & 0x80100000) == 0
-            && (controllerHolder.inputStates[0].buttonActions & 0x10) != 0x0) {
+            && (controllerHolder.inputStates[0].buttonActions & 0x10) != 0x0 && TTS_CHECK == 0x00000001) {
             return true;
         }
     }
@@ -167,7 +171,7 @@ kmCall(0x805973a4, FastFallingWheels);
 void TurnInAir() {
     U16_TURNINAIR = 0x0000;
     if(System::sInstance->IsContext(PULSAR_200) || U16_GAMEPLAY2 == 0x0001) {
-        if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW9,SETTINGS_TURN_IN_AIR) == TURN_IN_AIR_ENABLED && TTS_CHECK != 0x00000001) {
+        if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_ACCESSIBILITY,SETTINGS_TURN_IN_AIR) == TURN_IN_AIR_ENABLED && TTS_CHECK != 0x00000001) {
         U16_TURNINAIR = 0x0001;
         }
     }

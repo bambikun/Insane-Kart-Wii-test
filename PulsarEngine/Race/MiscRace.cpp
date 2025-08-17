@@ -58,9 +58,10 @@ kmWrite32(0x807eb160, 0x88de01b4);
 
 //credit to XeR for finding the float address
 static void BattleGlitchEnable() {
-    const u8 val = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE, SETTINGRACE_RADIO_BATTLE);
+    const u8 val = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE3, SETTINGS_BATTLE_GLITCH);
     float maxDistance = 7500.0f;
     if (val == RACESETTING_BATTLE_GLITCH_ENABLED) maxDistance = 75000.0f;
+    if (val == RACESETTING_BATTLE_GLITCH_NONE) maxDistance = 0.0f;
     System* system = System::sInstance;
     if (system->IsContext(PULSAR_MODE_OTT)) {
         const Input::RealControllerHolder* controllerHolder = SectionMgr::sInstance->pad.padInfos[0].controllerHolder;
@@ -87,26 +88,18 @@ static void BattleGlitchEnable() {
 RaceFrameHook BattleGlitch(BattleGlitchEnable);
 
 static void DisplayTimesInsteadOfNames(CtrlRaceResult& result, u8 id) {
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FINISH_TIMES) == FINISH_TIMES_DISABLED)
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_ONLINE,SETTINGS_SHOW_FINISH_TIMES) == FINISH_TIMES_DISABLED)
     result.FillName(id);
-    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_IKW3,SETTINGS_FINISH_TIMES) == FINISH_TIMES_ENABLED)
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_ONLINE,SETTINGS_SHOW_FINISH_TIMES) == FINISH_TIMES_ENABLED)
     result.FillFinishTime(id);
 }
 kmCall(0x8085d460, DisplayTimesInsteadOfNames); //for WWs
 
-//don't hide position tracker (MrBean35000vr)
-kmWrite32(0x807F4DB8, 0x38000001);
-
 //Draggable blue shells
 static void DraggableBlueShells(Item::PlayerObj& sub) {
-    if (Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE, SETTINGRACE_RADIO_BLUES) == RACESETTING_DRAGGABLE_BLUES_DISABLED) {
-        sub.isNotDragged = true;
-    }
+    sub.isNotDragged = false;
 }
 kmBranch(0x807ae8ac, DraggableBlueShells);
-
-//Coloured Minimap
-kmWrite32(0x807DFC24, 0x60000000);
 
 //Accurate Explosion Damage (MrBean, CLF)
 kmWrite16(0x80572690, 0x4800);

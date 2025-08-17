@@ -34,32 +34,63 @@ static void BeforeROOMSend(RKNet::PacketHolder<PulROOM>* packetHolder, PulROOM* 
         const u8 koSetting = settings.GetSettingValue(Settings::SETTINGSTYPE_KO, SETTINGKO_ENABLED) && destPacket->message == 0; //KO only enabled for normal GPs
         //invert mii setting as the first button is enabled, not disabled, so a value of 1 indicates disabled
         const u8 ottOnline = settings.GetSettingValue(Settings::SETTINGSTYPE_OTT, SETTINGOTT_ONLINE);
+        const u8 pointDistroTime = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_POINT_DISTRO) == POINT_DISTRO_TIME;
+        const u8 bombBlast = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_BOB_OMB_BLAST;
+        const u8 infiniteAcceleration = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_INFINITE_ACCELERATION;
+        const u8 bananaSlip = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_BANANA_SLIP;
+        const u8 randomItems = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_RANDOM_ITEMS;
+        const u8 unfairItems = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_UNFAIR_ITEMS;
+        const u8 blueShellMadness = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_BLUE_SHELL_MADNESS;
+        const u8 mushroomDash = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_MUSHROOM_DASH;
+        const u8 bumperKarts = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_BUMPER_KARTS;
+        const u8 randomEffects = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_RANDOM_EFFECTS;
+        const u8 itemRain = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_ITEM_RAIN;
+        const u8 shellBreak = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_SHELL_BREAK;
+        const u8 crazyItems = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_CRAZY_ITEMS;
+        const u8 riibalanced = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_RIIBALANCED;
+        const u8 ultrasEnabled = settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGS_GAME_MODE) == GAME_MODE_ULTRAS_ENABLED;
+        const u8 koFinal = settings.GetSettingValue(Settings::SETTINGSTYPE_KO, SETTINGKO_FINAL) == KOSETTING_FINAL_ALWAYS;
         destPacket->hostSystemContext = (ottOnline != OTTSETTING_OFFLINE_DISABLED) << PULSAR_MODE_OTT //ott
             | (ottOnline == OTTSETTING_ONLINE_FEATHER) << PULSAR_FEATHER //ott feather
             | (settings.GetSettingValue(Settings::SETTINGSTYPE_OTT, SETTINGOTT_ALLOWUMTS) ^ true) << PULSAR_UMTS //ott umts
             | koSetting << PULSAR_MODE_KO
             | (settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGHOST_ALLOW_MIIHEADS) ^ true) << PULSAR_MIIHEADS
-            | settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGHOST_RADIO_HOSTWINS) << PULSAR_HAW;
+            | pointDistroTime << PULSAR_POINT_DISTRO
+            | bombBlast << PULSAR_MODE_BOMB_BLAST
+            | infiniteAcceleration << PULSAR_MODE_INFINITE_ACCELERATION
+            | bananaSlip << PULSAR_MODE_BANANA_SLIP
+            | randomItems << PULSAR_MODE_RANDOM_ITEMS
+            | unfairItems << PULSAR_MODE_UNFAIR_ITEMS
+            | blueShellMadness << PULSAR_MODE_BLUE_SHELL_MADNESS
+            | mushroomDash << PULSAR_MODE_MUSHROOM_DASH
+            | bumperKarts << PULSAR_MODE_BUMPER_KARTS
+            | randomEffects << PULSAR_MODE_RANDOM_EFFECTS
+            | itemRain << PULSAR_MODE_ITEM_RAIN
+            | shellBreak << PULSAR_MODE_SHELL_BREAK
+            | crazyItems << PULSAR_MODE_CRAZY_ITEMS
+            | riibalanced << PULSAR_MODE_RIIBALANCED
+            | ultrasEnabled << PULSAR_MODE_ULTRAS_ENABLED
+            | koFinal << PULSAR_KOFINAL;
 
         u8 raceCount;
         if (koSetting == KOSETTING_ENABLED) raceCount = 0xFE;
         else switch (settings.GetSettingValue(Settings::SETTINGSTYPE_HOST, SETTINGHOST_SCROLL_GP_RACES)) {
-        case(0x2):
+        case(1):
             raceCount = 7;
             break;
-        case(0x4):
+        case(2):
             raceCount = 11;
             break;
-        case(0x6):
+        case(3):
             raceCount = 23;
             break;
-        case(0x8):
+        case(4):
             raceCount = 31;
             break;
-        case(0xA):
+        case(5):
             raceCount = 63;
             break;
-        case(0xC):
+        case(6):
             raceCount = 1;
             break;
         default:
