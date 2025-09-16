@@ -68,7 +68,7 @@ public:
 private:
     Mgr() : pulsarId(PULSARID_NONE), files(nullptr), areGhostsSaving(true) {
         Racedata* racedata = Racedata::sInstance;
-        for(int i = 0; i < 4; ++i) racedata->ghosts[i].ClearBuffer();
+        for(int i = 0; i < 12; ++i) racedata->ghosts[i].ClearBuffer();
     }
     ~Mgr() {
         delete[] this->files; //in case Reset wasn't called before
