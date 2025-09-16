@@ -93,7 +93,7 @@ private:
     Timer expertGhost; //0x8
     u32 rkgCount; //0x14
     u32 mainGhostIndex; //0x18 from the watch replay;
-    u32 selGhostsIndex[3]; //0x1c
+    u32 selGhostsIndex[11]; //0x1c
     u32 lastUsedSlot; //0x28
     u32 favGhostFileIndex[2]; //0x2c for saving and loading
     bool areGhostsSaving; //0x34
