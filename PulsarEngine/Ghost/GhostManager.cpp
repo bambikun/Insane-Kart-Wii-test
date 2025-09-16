@@ -120,7 +120,7 @@ void Mgr::Reset() {
     this->lastUsedSlot = 0;
     this->expertGhost.isActive = false;
     mainGhostIndex = 0xFF;
-    for(int i = 0; i < 3; ++i) selGhostsIndex[i] = 0xFF;
+    for(int i = 0; i < 11; ++i) selGhostsIndex[i] = 0xFF;
     this->favGhostFileIndex[0] = 0xFF;
     this->favGhostFileIndex[1] = 0xFF;
     new(&this->expertGhost) Timer;
@@ -129,7 +129,14 @@ void Mgr::Reset() {
     Racedata* racedata = Racedata::sInstance;
     racedata->menusScenario.players[1].playerType = PLAYER_NONE;
     racedata->menusScenario.players[2].playerType = PLAYER_NONE;
-    racedata->menusScenario.players[3].playerType = PLAYER_NONE;
+    racedata->menusScenario.players[4].playerType = PLAYER_NONE;
+    racedata->menusScenario.players[5].playerType = PLAYER_NONE;
+    racedata->menusScenario.players[6].playerType = PLAYER_NONE;
+    racedata->menusScenario.players[7].playerType = PLAYER_NONE;
+    racedata->menusScenario.players[8].playerType = PLAYER_NONE;
+    racedata->menusScenario.players[9].playerType = PLAYER_NONE;
+    racedata->menusScenario.players[10].playerType = PLAYER_NONE;
+    racedata->menusScenario.players[11].playerType = PLAYER_NONE;
 }
 
 void Mgr::SaveLeaderboard() {
@@ -167,7 +174,7 @@ bool Mgr::EnableGhost(const GhostListEntry& entry, bool isMain) {
 //Used when GhostSelect' ToggleButton is pressed to false
 void Mgr::DisableGhost(const GhostListEntry& entry) {
     const u32 index = entry.padding[0];
-    for(int i = 0; i < 3; ++i) {
+    for(int i = 0; i < 11; ++i) {
         if(this->selGhostsIndex[i] == index) {
             this->lastUsedSlot = i;
             this->selGhostsIndex[i] = 0xFF;
